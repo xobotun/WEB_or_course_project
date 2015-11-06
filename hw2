@@ -1,0 +1,92 @@
+upstream django 
+	{
+		server 127.0.0.1:8081; # This is gunicorn.
+	}
+
+server	{
+	listen 80;
+	access_log /media/sf_Shared/ask/nginx_access_log;
+	error_log /media/sf_Shared/ask/nginx_error_log;
+	server_name localhost; # Change to more sensible name like hw2.arr. In /etc/hosts too.
+	
+	set $basedir /media/sf_Shared/ask/ask_project_container;
+	
+	#root /media/sf_Shared/ask/ask_project_container;
+	root $basedir;
+	
+	##
+	#  First, describe unique files
+	##
+	
+	#location = /my.css
+	#{
+	#	proxy_cache cache;
+	#	proxy_cache_valid 10m;
+	#	proxy_cache_valid 404 1m;
+	#	root $basedir/static/css;
+	#	#root /media/sf_Shared/ask/ask_project_container/static/css;
+	#	expires 7d;
+	#}
+	
+	##
+	#  Then, describe unique directories
+	##
+	
+	#location ^~ /bootstrap {
+	#	proxy_cache cache;
+	#	proxy_cache_valid 30d;
+	#	proxy_cache_valid 404 1m;
+	#	#alias /media/sf_Shared/ask/ask_project_container/static/bootstrap;
+	#	alias $basedir/static/bootstrap;
+	#	expires 30d;
+	#}
+
+	location ^~ /uploads 
+	{
+		proxy_cache cache;
+		proxy_cache_valid 7d;
+		proxy_cache_valid 404 10m; 
+		#alias /media/sf_Shared/ask/ask_project_container/uploads;
+		alias $basedir/uploads;
+		expires 7d; # Not quite sure. User content is so unpredictable...
+	}
+	
+	##
+	#  After that, describe all other files that are not unique
+	##
+	
+	# I hate regular expressions
+	# ^ == beginning of the line.
+	# .+ == more than zero of any symbol. Any. Including '/'.
+	# \. == period. Period.
+	# .+ == any extension. (I hope there won't be periods in URI?)
+	location ~* ^.+\..+	 
+	{
+		proxy_cache cache;
+		proxy_cache_valid 10m;
+		proxy_cache_valid 404 1m;
+		#root /media/sf_Shared/ask/ask_project_container/static; # There exists another location for uploads.
+		root $basedir/static;
+	}
+	
+	##
+	#  Finally, describe all other directories. This means everything non-static, i.e. django application files
+	##
+	
+	location / 
+	{
+		proxy_cache cache;
+		proxy_connect_timeout 10;
+		proxy_read_timeout 30;
+		proxy_pass_header Server; # This is simply cosmetic thing.
+		proxy_set_header Host $host;
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header X-Scheme $scheme;
+
+		proxy_pass http://django;
+		#root /media/sf_Shared/ask/ask_project_container/static/html-only/compilation;
+	}
+
+	
+}
+
