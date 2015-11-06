@@ -15,17 +15,18 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'ngm0^pk6^f(o_b&av9apca9q!s127(5cj7i3)&(!_3g3k^svv+'
+SECRET_KEY = 'q$w*)0fxkv&s736m_wi)-88i(9z=+z2l#w%u3q=vp%*9d*pwsh'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+	'*',
+]
 
 
 # Application definition
@@ -37,6 +38,9 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+	#os.path.join(BASE_DIR, 'crm'),
+	#'crm',
+	'ask_app',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -50,12 +54,13 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.security.SecurityMiddleware',
 )
 
+#ROOT_URLCONF = os.path.join(BASE_DIR, 'ask_maminov.urls')
 ROOT_URLCONF = 'ask_maminov.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -68,6 +73,7 @@ TEMPLATES = [
     },
 ]
 
+#WSGI_APPLICATION = os.path.join(BASE_DIR, 'ask_maminov.wsgi.application')
 WSGI_APPLICATION = 'ask_maminov.wsgi.application'
 
 
@@ -99,4 +105,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
-STATIC_URL = '/static/'
+#STATIC_URL = os.path.join(BASE_DIR, 'static/')
+STATIC_URL = 'static/'
+
+# Local settings pattern
+
+try:
+	from ask_maminov.local_settings import *
+except ImportError:
+	pass
