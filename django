@@ -1,0 +1,17 @@
+CONFIG = {
+    'mode': 'wsgi', # "django" is deprecated. Doesn't work... T_T
+    'environment': {
+       # 'PYTHONPATH': '/path/to/custom/python/packages',
+    },
+    'working_dir': '/media/sf_Shared/ask/ask_project_container',
+    'user': 'www-data',
+    'group': 'vboxsf',
+    'args': (
+        '--bind=127.0.0.1:8081',
+        '--workers=2',
+        # '--worker-class=egg:gunicorn#sync',
+        '--timeout=30',
+        #'settings',
+	'ask_maminov.wsgi:application',
+    ),
+}
