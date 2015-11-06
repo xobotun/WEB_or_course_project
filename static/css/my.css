@@ -1,0 +1,143 @@
+.avatar-holder-50
+{
+	display: inline-block;
+	border: solid 1px #cccccc;
+	border-radius: 2px;
+	padding: 2px;
+	margin: 5px auto;
+	height: 50px;
+	width: 50px;
+}
+.avatar-holder-100
+{
+	display: inline-block;
+	border: solid 1px #cccccc;
+	border-radius: 2px;
+	padding: 2px;
+	margin: 5px auto;
+	height: 100px;
+	width: 100px;
+}
+.file-upload{
+	height: auto;
+}
+
+.pull-center{
+	text-align: center;
+}
+
+.username-h3{
+	margin-top: 0px;
+	margin-bottom: 5px;
+}
+
+.my-navbar-text{
+	margin-right: -5px;
+	margin-left: -5px;	
+}
+
+.row-no-margin{
+	margin-right: 0px;
+	margin-left: 0px;	
+}
+
+.col-no-padding{
+	padding-right: 0px;
+	padding-left: 0px;	
+}
+
+.hr-invisible{
+	border-top:0px;	
+}
+
+.text-to-right{
+	text-align: right;
+}
+
+.vote-up{
+	color: #669966;
+}
+.vote-down{
+	color: #996666;
+}
+.voted-up{
+	background-color: #ccffcc;
+}
+.voted-down{
+	background-color: #ffcccc;
+}
+
+.small-text-under-question{
+	margin-top: 0.6em;
+	font-size: 0.8em;
+}
+
+.inline-block{
+	display: inline-block;
+}
+
+.answer{
+	margin-top: 10px;
+}
+
+.correct-answer-checkbox{
+	font-size: 7.5em;
+	vertical-align: top;
+	color: #eeeeee;
+}
+
+.correct-answer-checkbox-inner-thing-unchecked:hover{
+	background-color: #eeeeee;
+	border-radius: 4px;
+	color: #aaffaa;
+	margin: -20px;
+	padding: 20px;
+}
+
+.correct-answer-checkbox-inner-thing-unchecked:active{
+	background-color: #eeeeee;
+	border-radius: 4px;
+	color: #66cc66;
+	margin: -20px;
+	padding: 20px;
+}
+
+.correct-answer-checkbox-inner-thing-checked{
+	color: #669966;
+}
+
+.correct-answer-checkbox-inner-thing-checked:hover{
+	background-color: #eeeeee;
+	border-radius: 4px;
+	color: #aaffaa;
+	margin: -20px;
+	padding: 20px;
+}
+
+.correct-answer-checkbox-inner-thing-checked:active{
+	background-color: #eeeeee;
+	border-radius: 4px;
+	color: #ffcccc;
+	margin: -20px;
+	padding: 20px;
+}
+
+#right-block{
+	margin-left: 30px;
+}
+
+.width-120-px-4userpic{
+	display: inline-block;
+	width: 120px;
+	margin: 0 10px
+}
+
+.answer-text{
+	display: inline-block;
+	vertical-align: top;
+	width: auto;
+}
+
+.nowrap{
+	white-space: nowrap;
+}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}
+	{{ title }}
+{% endblock %}
+{% block navbar %}
+	{% include "navbar.html" with current_user = user %}
+{% endblock %}
+{% block content %}
+	{% include "questions.html" with list = question_list %}
+{% endblock %}
+{% block right_block %}
+	DO NOT REPORT AS A BUG
+{% endblock %}

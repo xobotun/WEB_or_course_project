@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+		<title>{% block title %}REPORT AS A BUG{% endblock %}</title>
+		<link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/my.css" rel="stylesheet">
+	</head>
+	<body>
+	   {% block navbar %}{% endblock %}
+		<div class="row row-no-margin">
+			<div class="col-lg-6 col-lg-offset-2 col-md-8" id="main-body">
+				{% block content %}{% endblock %}
+			</div>
+			<div class="col-lg-2 col-md-3" id="right-block">
+				{% block right_block %}{% endblock %}
+			</div>
+		</div>
+		<script src="//ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojo/dojo.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+		<script src="bootstrap/js/bootstrap.min.js"></script>
+	</body>
+</html>
