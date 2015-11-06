@@ -6,9 +6,10 @@ from django.http import HttpResponseRedirect
 from logic import *
 
 def main_page(request):
-	user = {'is_authitencated': 'True', 'name':'Name'}
+	# user = one_question_for_question_page(0);
+	user = temporary_question_list[0]['author']
 	context = {}
-	context.update({'title': 'Titled template', 'user': user })
+	context.update({'title': 'Titled template', 'user': user, 'question_list': temporary_question_list, 'paginator': paginator})
 	return render(request, 'main_page.html', context)
 	# TODO: logic
 	

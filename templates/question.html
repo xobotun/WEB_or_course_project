@@ -1,0 +1,29 @@
+<div class="row answer" id="question_{{question.id}}">
+		
+	<div class="row">
+		<a href="#" class="col-md-offset-3 col-lg-offset-2 h3">{{question.title}}</a>
+	</div>
+	
+	<div class="row">
+	
+		<div class="col-md-3 col-lg-2 pull-center">
+			<img class="avatar-holder-100" src="{{question.author.userpic_path}}">
+			<br><a href="#">{{question.author.name}}</a><br>
+			<div class="btn-group nowrap">
+				<a href="{{question.author.id}}" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-arrow-up vote-up"></span></a><span class="btn btn-default btn-xs">{{question.rating}}</span><a href="#" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-arrow-down vote-down"></span></a>
+			</div>
+		</div>
+	  
+		<div class="col-md-9 col-lg-10">
+		{{question.text}}	
+		</div>
+		
+	</div>
+	
+	<div class="row small-text-under-question">
+		<div class="col-md-1 col-md-offset-2">{{question.date}}</div>
+		<div class="col-md-3 col-md-offset-2"><a href="#">Answers({{question.answers_amount}})</a></div>
+		{#<div class="col-md-3 col-md-offset-1">Tags: <a href="{% url 'tag' question.tags.tag1name %}">{{question.tags.tag1name}}</a>{% if question.tags.tag2name %}, <a href="{% url 'tag' question.tags.tag2name %}">{{question.tags.tag2name}}</a>{% endif %}{% if question.tags.tag3name %}, <a href="{% url 'tag' question.tags.tag3name %}">{{question.tags.tag3name}}</a>{% endif %}</div>#}
+	</div>
+		
+</div>
