@@ -1,14 +1,13 @@
-<button type="button" class="btn btn-default btn-sm dropdown-toggle col-md-12" data-toggle="dropdown">
-		<span class="glyphicon glyphicon-align-left pull-left"></span>
-		Sorting
-		<span class="glyphicon glyphicon-chevron-down pull-right"></span>
-	</button>
-	<ul class="dropdown-menu col-md-12">
-		<li><a href="{% url 'questions' %}?sort=date&order=desc&{{request.GET.urlencode}}">By Date: Newer First</a></li>
-		<li><a href="{% url 'questions' %}?sort=date&order=asc&{{request.GET.urlencode}}">By Date: Older First</a></li>
-		<li><a href="{% url 'questions' %}?sort=rating&order=desc&{{request.GET.urlencode}}">By Rating: Better First</a></li>
-		<li><a href="{% url 'questions' %}?sort=rating&order=asc&{{request.GET.urlencode}}">By Rating: Worse First</a></li>
-	</ul>
+	<div class="row">
+		<button type="button" class="btn btn-default btn-sm dropdown-toggle col-md-12" data-toggle="dropdown">
+			<span class="glyphicon glyphicon-align-left pull-left"></span>Sorting<span class="glyphicon glyphicon-chevron-down pull-right"></span>
+		</button>
+		<ul class="dropdown-menu col-sm-12 col-md-12">
+			<li><a href="{% url 'questions' %}?sort=date&order=desc&{{request.GET.urlencode}}">By Date: Newer First</a></li>
+			<li><a href="{% url 'questions' %}?sort=date&order=asc&{{request.GET.urlencode}}">By Date: Older First</a></li>
+			<li><a href="{% url 'questions' %}?sort=rating&order=desc&{{request.GET.urlencode}}">By Rating: Better First</a></li>
+			<li><a href="{% url 'questions' %}?sort=rating&order=asc&{{request.GET.urlencode}}">By Rating: Worse First</a></li>
+		</ul>
 	</div>
 
 	<hr class="row col-sm-12">
@@ -20,4 +19,4 @@
 
   
   	<hr class="row col-sm-12">
-	{% include "pagination_buttons.html" %}
+	{% include "pagination_buttons.html" with paginator=paginator %}

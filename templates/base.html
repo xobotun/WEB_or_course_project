@@ -12,11 +12,12 @@
 	<body>
 	   {% block navbar %}{% endblock %}
 		<div class="row row-no-margin">
-			<div class="col-lg-6 col-lg-offset-2 col-md-8" id="main-body">
+			<div class="col-lg-6 col-lg-offset-2 col-md-8 col-sm-8" id="main-body">
 				{% block content %}{% endblock %}
 			</div>
-			<div class="col-lg-2 col-md-3" id="right-block">
-				{% block right_block %}{% endblock %}
+			<div class="col-lg-2 col-md-3 col-sm-3" id="right-block">
+				{#{% block right_block %}{% endblock %}#}
+				{% include "right_block.html" with right_block=right_block %}
 			</div>
 		</div>
 		<script src="//ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojo/dojo.js"></script>
