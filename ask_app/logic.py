@@ -27,12 +27,24 @@ def paginate(objects, number):
 		page = paginator.page(number)
 	except EmptyPage:
 		page = paginator.page(1)
+	
+	# TODO: translate from pseudocode
+	pages = paginator.pages_list
+	pages_around_current = []
+	for page in pages:
+		if (number - 3 >= page && page <= number + 3):
+			pages_around_current += page
+		
 	return {'current_page': number,
 			'questions': page, 
 			'has_previous': page.has_previous(), 
 			'has_next': page.has_next(), 
 			'previous_number': int(number) - 1, 
-			'next_number': int(number) + 1}
+			'next_number': int(number) + 1
+			'other_pages': pages_around_current,
+			'first_page': paginator.first,
+			'last_page': paginator.last,
+			}
 	
 def right_block():
 	temp_user_list = []
