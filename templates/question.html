@@ -22,7 +22,7 @@
 	
 	<div class="row small-text-under-question">
 		<div class="col-sm-1 col-md-1 col-sm-offset-2 col-md-offset-2">{{question.date}}</div>
-		<div class="col-sm-1 col-md-3 col-sm-offset-2 col-md-offset-2"><a href="#">Answers({{question.comments_amount}})</a></div>
+		<div class="col-sm-1 col-md-3 col-sm-offset-2 col-md-offset-2"><a href="{% url 'question' question.id %}">Answers({{question.comments_amount}})</a></div>
 		{#<div class="col-sm-3 col-md-3 col-sm-offset-1 col-md-offset-1">Tags: <a href="{% url 'tag' question.tags.tag1name %}">{{question.tags.tag1name}}</a>{% if question.tags.tag2name %}, <a href="{% url 'tag' question.tags.tag2name %}">{{question.tags.tag2name}}</a>{% endif %}{% if question.tags.tag3name %}, <a href="{% url 'tag' question.tags.tag3name %}">{{question.tags.tag3name}}</a>{% endif %}</div>#}
 	</div>
 		

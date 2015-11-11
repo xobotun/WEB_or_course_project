@@ -17,7 +17,7 @@
 			</div>
 			<div class="col-lg-2 col-md-3 col-sm-3" id="right-block">
 				{#{% block right_block %}{% endblock %}#}
-				{% include "right_block.html" with right_block=right_block %}
+				{% include "right_block.html" with users=right_block.users tags=right_block.tags %}
 			</div>
 		</div>
 		<script src="//ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojo/dojo.js"></script>

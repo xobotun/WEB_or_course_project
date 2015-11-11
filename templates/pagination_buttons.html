@@ -1,11 +1,13 @@
 	<div class="btn-group col-sm-8 col-sm-offset-2">
 	{% if paginator.has_previous %}
+		<a href="{% url 'questions' paginator.first_page %}" class="btn btn-default btn-xs col-sm-1"><span class="glyphicon glyphicon-fast-backward"></span></a>
 		<a href="{% url 'questions' paginator.previous_number %}" class="btn btn-default btn-xs col-sm-1"><span class="glyphicon glyphicon-chevron-left"></span></a>
-		<a href="{% url 'questions' paginator.previous_number %}" class="btn btn-default btn-xs col-sm-1">{{paginator.previous_number}}</a>
 	{% endif %}
-		<span class="btn btn-default btn-xs btn-primary col-sm-1">{{paginator.current_page}}</span>
+	{% for page_number in paginator.other_pages %}
+		<a href="{% url 'questions' page_number %}" class="btn btn-default btn-xs col-sm-1">{{page_number}}</a>
+	{% endfor %}
 	{% if paginator.has_next %}
-		<a href="{% url 'questions' paginator.next_number %}" class="btn btn-default btn-xs col-sm-1">{{paginator.next_number}}</a>
 		<a href="{% url 'questions' paginator.next_number %}" class="btn btn-default btn-xs col-sm-1"><span class="glyphicon glyphicon-chevron-right"></span></a>
+		<a href="{% url 'questions' paginator.last_page %}" class="btn btn-default btn-xs col-sm-1"><span class="glyphicon glyphicon-fast-forward"></span></a>
 	{% endif %}
 	</div>

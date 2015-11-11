@@ -80,16 +80,16 @@ WSGI_APPLICATION = 'ask_maminov.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-	'NAME': 'ask_db',
-	'USER': 'askuser',
-	'PASSWORD': 'secret',
-	'HOST': '127.0.0.1',
-	'PORT': '3306',
-    }
-}
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.mysql',
+#	'NAME': 'ask_db',
+#	'USER': 'askuser',
+#	'PASSWORD': 'secret',
+#	'HOST': '127.0.0.1',
+#	'PORT': '3306',
+#    }
+#}
 
 
 # Internationalization
