@@ -13,10 +13,10 @@
 	<hr class="row col-sm-12">
 	
 	{% for question in questions %}
-		{% include "question.html" with question=question %}
+		{% include "elements/question.html" with question=question %}
 	{% endfor %}
 
 
   
   	<hr class="row col-sm-12">
-	{% include "pagination_buttons.html" with paginator=paginator %}
+	{% include "elements/pagination_buttons.html" with paginator=paginator %}

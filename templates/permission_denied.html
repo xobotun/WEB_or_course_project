@@ -1,0 +1,15 @@
+{% extends "base_structure.html" %}
+{% block title %}
+	{{ Oops! }}
+{% endblock %}
+{% block navbar %}
+	{% include "elements/navbar.html" with current_user=user %}
+{% endblock %}
+{% block content %}
+	<div class="row">
+		<p class="h1 col-sm-offset-3 col-lg-offset-2">Access denied!<p>
+		<p class="h3 col-sm-offset-2 col-lg-offset-1">It seems you don't have right permissions to visit this page. We are sorry abouth this!<p>
+		<p class="h3 col-sm-offset-2 col-lg-offset-1">You will be transfered to <a href="{% url '' %}">main page</a> in three seconds.<p>
+		<hr>
+	</div>
+{% endblock %}
