@@ -7,44 +7,44 @@
 <form class="form-horizontal">
 	<div class="form-group">
 		<label for="inputLogin" class="col-sm-3 control-label">Login</label>
-		<input type="login" class="form-control col-sm-6" id="inputLogin" placeholder="Login">
+		<input type="login" class="col-sm-6" id="inputLogin" placeholder="Login">
 		{% if login_string %}
 			{{login_string}}</input>
 		{% endif %}
 	</div>
 	<div class="form-group">
 		<label for="inputEmail" class="col-sm-3 control-label">E-mail</label>
-		<input type="email" class="form-control col-sm-6" id="inputEmail" placeholder="E-mail">
+		<input type="email" class="col-sm-6" id="inputEmail" placeholder="E-mail">
 		{% if email_string %}
 			{{email_string}}</input>
 		{% endif %}
 	</div>
 	<div class="form-group">
 		<label for="inputNick" class="col-sm-3 control-label">Shown name</label>
-		<input type="nickname" class="form-control col-sm-6" id="inputNick" placeholder="Nickname">
+		<input type="nickname" class="col-sm-6" id="inputNick" placeholder="Nickname">
 		{% if nickname_string %}
 			{{nickname_string}}</input>
 		{% endif %}
 	</div>
 	<div class="form-group">
 		<label for="inputPass" class="col-sm-3 control-label">Password</label>
-		<input type="password" class="form-control col-sm-6" id="inputPass" placeholder="Password">
+		<input type="password" class="col-sm-6" id="inputPass" placeholder="Password">
 	</div>
 	<div class="form-group">
 		<label for="inputRePass" class="col-sm-3 control-label">Repeat Password</label>
-		<input type="re-password" class="form-control col-sm-6" id="inputRePass" placeholder="Repeat Password">
+		<input type="re-password" class="col-sm-6" id="inputRePass" placeholder="Repeat Password">
 	</div>
 	<div class="form-group">
 		<label for="inputAvatar" class="col-sm-3 control-label">Avatar</label>
-		<input type="file" class="form-control file-upload col-sm-6" id="inputAvatar" placeholder="C:\avatar.png">
+		<input type="file" class="file-upload col-sm-6" id="inputAvatar" placeholder="C:\avatar.png">
 		{% if userpic_path_string %}
 			{{userpic_path_string}}</input>
 		{% endif %}
 	</div>
 	<div class="form-group row row-no-margin">
-		<div class="col-sm-offset-3 col-sm-4">
+		<div class="col-sm-offset-3 col-sm-6">
 			<button type="submit" class="btn btn-success">Register</button>
-			or <a href="#" class="btn btn-info">Log in</a>
+			or <a href="{% url 'login' %}" class="btn btn-info">Log in</a>
 		</div>
 	</div>
 </form>

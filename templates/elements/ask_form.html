@@ -6,14 +6,14 @@
 <form class="form-horizontal row">
 	<div class="form-group">
 		<label for="inputTitle" class="col-sm-3 col-lg-2 control-label">Title</label>
-		<input type="text" class="form-control col-sm-6" id="inputTitle" placeholder="Title">
+		<input type="text" class="col-sm-6" id="inputTitle" placeholder="Title">
 		{% if title_string %}
 			{{title_string}}</input>
 		{% endif %}
 	</div>
 	<div class="form-group">
 		<label for="inputText" class="col-sm-3 col-lg-2 control-label">Text</label>
-		<textarea type="text" rows="9" class="form-control col-sm-6" id="inputText" placeholder="Place your text here if you didn't find answer in Google.">
+		<textarea type="text" rows="9" class="col-sm-6" id="inputText" placeholder="Place your text here if you didn't find answer in Google.">
 		{% if question_string %}
 			{{question_string}}
 		{% endif %}
@@ -21,7 +21,7 @@
 	</div>
 	<div class="form-group">
 		<label for="inputTags" class="col-sm-3 col-lg-2 control-label">Tags</label>
-		<input type="text" class="form-control col-sm-6" id="inputTags" placeholder="Three or less">
+		<input type="text" class="col-sm-6" id="inputTags" placeholder="Three or less">
 		{% if tags_string %}
 			{{tags_string}}</input>
 		{% endif %}
