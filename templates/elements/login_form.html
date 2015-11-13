@@ -1,0 +1,28 @@
+<div class="row">
+	<p class="h1 col-lg-offset-2 col-sm-offset-3">Log in<p>
+	<hr>
+</div>
+
+
+<form class="form-horizontal row">
+	<div class="form-group">
+		<label for="inputLogin" class="col-sm-3 col-lg-2 control-label">Login</label>
+		<input type="login" class="form-control col-sm-6" id="inputLogin" placeholder="Login">
+		{% if login_string %}
+			{{login_string}}</input>
+		{% endif %}
+	</div>
+	<div class="form-group">
+		<label for="inputPass" class="col-sm-3 col-lg-2 control-label">Password</label>
+		<input type="password" class="form-control col-sm-6" id="inputPass" placeholder="Password">
+	</div>
+	<div class="form-group">
+		<div class="row row-no-margin">
+			<div class="col-sm-offset-3 col-lg-offset-2 col-sm-6">
+				<button type="submit" class="btn btn-success">Log in</button>
+				or
+				<a href="register-no-auth.html" class="btn btn-info">Register</a>
+			</div>
+		</div>
+	</div>
+</form>
