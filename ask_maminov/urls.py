@@ -18,8 +18,5 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-	# homework 2 done; no need in crm
-	#url(r'^crm/', include('crm.urls')),
 	url(r'^', include('ask_app.urls')),
-
 ]

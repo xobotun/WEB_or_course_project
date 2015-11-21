@@ -4,31 +4,41 @@
 
 <hr>
 
-<form class="form-horizontal">
+<form class="form-horizontal" action="POST" enctype="multipart/form-data">
+	{% csrf_token %}
+	{% for field in form.visible_fields %}
+		<div class="form-group">
+			<label for="{{ field.name }}" class="col-sm-3 control-label">{{ field.label }}</label>
+			{{ field }}
+			{% if login_string %}
+				{{login_string}}</input>
+			{% endif %}
+		</div>
+	{% endfor %}
 	<div class="form-group">
 		<label for="inputLogin" class="col-sm-3 control-label">Login</label>
-		<input type="login" class="col-sm-6" id="inputLogin" placeholder="Login">
+		<input type="login" class="col-sm-6" id="inputLogin" placeholder="Login" name="login">
 		{% if login_string %}
 			{{login_string}}</input>
 		{% endif %}
 	</div>
 	<div class="form-group">
 		<label for="inputEmail" class="col-sm-3 control-label">E-mail</label>
-		<input type="email" class="col-sm-6" id="inputEmail" placeholder="E-mail">
+		<input type="email" class="col-sm-6" id="inputEmail" placeholder="E-mail" name="email">
 		{% if email_string %}
 			{{email_string}}</input>
 		{% endif %}
 	</div>
 	<div class="form-group">
 		<label for="inputNick" class="col-sm-3 control-label">Shown name</label>
-		<input type="nickname" class="col-sm-6" id="inputNick" placeholder="Nickname">
+		<input type="nickname" class="col-sm-6" id="inputNick" placeholder="Nickname" name="nickname">
 		{% if nickname_string %}
 			{{nickname_string}}</input>
 		{% endif %}
 	</div>
 	<div class="form-group">
 		<label for="inputPass" class="col-sm-3 control-label">Password</label>
-		<input type="password" class="col-sm-6" id="inputPass" placeholder="Password">
+		<input type="password" class="col-sm-6" id="inputPass" placeholder="Password" name="password">
 	</div>
 	<div class="form-group">
 		<label for="inputRePass" class="col-sm-3 control-label">Repeat Password</label>
@@ -36,7 +46,7 @@
 	</div>
 	<div class="form-group">
 		<label for="inputAvatar" class="col-sm-3 control-label">Avatar</label>
-		<input type="file" class="file-upload col-sm-6" id="inputAvatar" placeholder="C:\avatar.png">
+		<input type="file" class="file-upload col-sm-6" id="inputAvatar" placeholder="C:\avatar.png" name="userpic">
 		{% if userpic_path_string %}
 			{{userpic_path_string}}</input>
 		{% endif %}

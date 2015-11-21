@@ -14,7 +14,7 @@
 			<button type="submit" class="btn btn-success">Find!</button>
 		</form>
 		<p class="nav navbar-text my-navbar-text">or</p>
-		{% if user %}
+		{% if user.is_authenticated %}
 		<form class="navbar-form navbar-left" role="link" action="{% url 'ask' %}">
 			<button type="submit" class="btn btn-info">Ask?</button>
 		</form>
@@ -22,7 +22,7 @@
 	</div><!-- /.navbar-collapse -->
 	
 	<div class="navbar-header col-lg-3 col-md-4 col-sm4 nav navbar-nav navbar-right">
-	{% if user %}
+	{% if user.is_authenticated %}
 	<div class="row">
 		<div class="col-sm-3 col-md-2 col-lg-3">
 			<img class="avatar-holder-50" src="{{user.userpic_path}}">

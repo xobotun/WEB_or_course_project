@@ -38,8 +38,6 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-	#os.path.join(BASE_DIR, 'crm'),
-	#'crm',
 	'ask_app',
 )
 
@@ -80,16 +78,16 @@ WSGI_APPLICATION = 'ask_maminov.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.mysql',
-#	'NAME': 'ask_db',
-#	'USER': 'askuser',
-#	'PASSWORD': 'secret',
-#	'HOST': '127.0.0.1',
-#	'PORT': '3306',
-#    }
-#}
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+		'NAME': 'ask_db',
+		'USER': 'ask_user',
+		'PASSWORD': 'secret',
+		'HOST': '127.0.0.1',
+		'PORT': '3306',
+    }
+}
 
 
 # Internationalization
@@ -110,7 +108,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 #STATIC_URL = os.path.join(BASE_DIR, 'static/')
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+
+AUTHENTICATION_BACKENDS = (
+		'django.contrib.auth.backends.ModelBackend',
+)
+
+MEDIA_ROOT = os.path.join(BASE_DIR, "uploads")
+MEDIA_URL = 'uploads/'
 
 # Local settings pattern
 
