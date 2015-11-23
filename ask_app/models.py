@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User # generic user
 from django.utils import timezone	# Make every occurency to datetime.
-# Create your models here.
 
 ###
 ##	Managers
@@ -13,13 +12,17 @@ class ExtendedUserManager(models.Manager):
 		return self.order_by('-rating')
 		
 	def top10(self):
-		return self.order_by('-rating')[10:]
-
+		return self.order_by('-rating')[:10]
+		
+	def user_info(self, user_1):
+		ext_user = self.get(user=user_1)
+		user_dict = {'name': ext_user.nickname, 'userpic_path': ext_user.userpic, 'id': user_1.pk, 'rating': ext_user.rating}
 
 class QuestionManager(models.Manager):
 	
 	def newest(self):
-		return self.order_by('-created')
+		question_query = self.order_by('-rating')
+		return self.form_dictionary(query=question_query)
 		
 	def oldest(self):
 		return self.order_by('created')
@@ -29,12 +32,45 @@ class QuestionManager(models.Manager):
 		
 	def nonhot(self):
 		return self.order_by('rating')
+		
+	def one_question(self, question):
+		author_dict = ExtendedAskUser.objects.user_info(user_1=question.author)
+		tags_list = []
+		tags = question.tags.all()
+		for tag in tags:
+			tag_dict = {'name': tag.tagName, 'rating': tag.rating}
+			tags_list.append(tag_dict)
+		question_dict = { 'id': question.pk, 'author': author_dict, 'rating': question.rating, 'title': question.title, 'text': question.text, 'tags': tags_list, 'comments_amount': question.answers_amount, 'created': question.created }
+		return question_dict
+		
+	def one_question_answers(self, id):
+		question = self.get(pk=id)
+		question_answers_dict = {'question': self.one_question(question=question), 'answers': Answer.objects.form_dictionary(query=question.answers.all())}
+		return question_answers_dict
+		
+	def form_dictionary(self, query):
+		questions_list = []
+		for question in query:
+			questions_list.append(self.one_question(question=question))
+		return questions_list
 
 		
 class AnswerManager(models.Manager):
 	
 	def best(self):
-		return self.order_by('-rating').order_by('-isBestAnswer')
+		answer_query = self.order_by('-rating').order_by('-isBestAnswer')
+		return form_dictionary(query=answer_query)
+		
+	def form_dictionary(self, query):
+		answers_list = []
+		for answer in query
+			answers_list.append(self.one_answer(answer=answer))
+		return answers_list
+		
+	def one_answer(self, answer):
+		author_dict = ExtendedAskUser.objects.user_info(user_1=answer.author)
+		answer_dict = { 'id': answer.pk, 'author': author_dict, 'rating': answer.rating, 'text': answer.text, 'created': answer.created, 'isBestAnswer': answer.isBestAnswer }
+		return answer_dict
 		
 class TagManager(models.Manager):
 	
@@ -61,7 +97,7 @@ class ExtendedAskUser(models.Model):
 	userpic = models.FileField(upload_to=userpic_upload_path, blank=True)
 	rating = models.IntegerField(default=0, db_index=True)
 	
-	objects = ExtendedUserManager
+	objects = ExtendedUserManager()
 	
 	def __unicode__(self):
 		return self.nickname
@@ -80,7 +116,7 @@ class Question(models.Model):
 	tags = models.ManyToManyField('Tag')
 	answers_amount = models.PositiveIntegerField(default=0)
 	
-	objects = QuestionManager
+	objects = QuestionManager()
 
 	def __unicode__(self):
 		return self.title + "\n" + self.text
@@ -98,7 +134,7 @@ class Answer(models.Model):
 	question = models.ForeignKey(Question, on_delete=models.CASCADE)
 	isBestAnswer = models.BooleanField(default=False, db_index=True)
 	
-	objects = AnswerManager
+	objects = AnswerManager()
 	
 	def __unicode__(self):
 		return self.text
@@ -123,7 +159,7 @@ class Tag(models.Model):
 	tagName = models.CharField(max_length=255, unique=True)
 	rating = models.IntegerField(default=0, db_index=True)
 	
-	objects = TagManager
+	objects = TagManager()
 	
 	def __unicode__(self):
 		return self.tagName

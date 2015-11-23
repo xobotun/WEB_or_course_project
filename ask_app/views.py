@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, Http404
 from django.contrib.auth.decorators import login_required
 from django.contrib import auth
+from ask_app.models import *
 
 # Create your views here.
 
@@ -10,11 +11,10 @@ from logic import *
 
 # Done
 def main_page(request):
-	# user = one_question_for_question_page(0);
-	user = temporary_question_list[0]['author']
+	question_list = Question.objects.newest()
 	context = {}
-	tql = paginate(temporary_question_list * 4, 1)
-	context.update({'title': 'Titled template', 'user': user, 'question_list': tql['questions'], 'paginator': tql, 'right_block': right_block()})
+	tql = paginate(question_list, 1)
+	context.update({'title': 'Titled template', 'user': request.user, 'question_list': question_list, 'paginator': tql, 'right_block': right_block()})
 	return render(request, 'main_page.html', context)
 	# TODO: logic
 	
@@ -44,13 +44,12 @@ def questions(request, page_num=1):
 
 # Done
 def question(request, question_num):
-	user = temporary_question_list[0]['author']
 	try:
-		temporary_question_list[int(question_num)]
-	except IndexError:
+		question_answers = Question.objects.one_question_answers(id=question_num)
+	except Question.DoesNotExist:
 		raise Http404
 	context = {}
-	context.update({'title': 'Answers to ' + temporary_question_list[int(question_num)]['title'], 'user': user, 'question': temporary_question_list[int(question_num)], 'answers': temporary_answer_list, 'right_block': right_block()})
+	context.update({'title': 'Answers to ' + question_answers.question['title'], 'user': User.objects.user_info(request.user), 'question': question_answers.question, 'answers': question_answers.answers, 'right_block': right_block()})
 	return render(request, 'question_answers.html', context)
 
 # Done
