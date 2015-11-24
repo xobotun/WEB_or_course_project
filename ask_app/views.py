@@ -14,7 +14,8 @@ def main_page(request):
 	question_list = Question.objects.newest()
 	context = {}
 	tql = paginate(question_list, 1)
-	context.update({'title': 'Titled template', 'user': request.user, 'question_list': question_list, 'paginator': tql, 'right_block': right_block()})
+	question_list = Question.objects.form_dictionary(query=tql['questions'].object_list)
+	context.update({'title': 'Titled template', 'user': ExtendedAskUser.objects.user_info(user_1=request.user), 'question_list': question_list, 'paginator': tql, 'right_block': right_block()})
 	return render(request, 'main_page.html', context)
 	# TODO: logic
 	
@@ -49,7 +50,7 @@ def question(request, question_num):
 	except Question.DoesNotExist:
 		raise Http404
 	context = {}
-	context.update({'title': 'Answers to ' + question_answers.question['title'], 'user': User.objects.user_info(request.user), 'question': question_answers.question, 'answers': question_answers.answers, 'right_block': right_block()})
+	context.update({'title': 'Answers to ' + question_answers['question']['title'], 'user': ExtendedAskUser.objects.user_info(user_1=request.user), 'question': question_answers['question'], 'answers': question_answers['answers'], 'right_block': right_block()})
 	return render(request, 'question_answers.html', context)
 
 # Done

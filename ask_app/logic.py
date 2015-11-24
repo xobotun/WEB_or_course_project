@@ -61,10 +61,12 @@ def paginate(objects, number):
 			}
 	
 def right_block():
-	temp_user_list = []
-	for i in range(0,3):
-		temp_user_list.append(temporary_question_list[i]['author'])
-	return {'tags': temporary_tag_list, 'users': temp_user_list}
+	top_users_query = ExtendedAskUser.objects.top10()
+	top_users_list = []
+	for user in top_users_query:
+		top_users_list.append(ExtendedAskUser.objects.form_dictionary(user))
+	top_tags_list = Tag.objects.form_dictionary(Tag.objects.best())
+	return {'tags': top_tags_list, 'users': top_users_list}
 
 
 #	Copy-paste from source

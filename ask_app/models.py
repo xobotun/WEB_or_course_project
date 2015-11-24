@@ -12,17 +12,23 @@ class ExtendedUserManager(models.Manager):
 		return self.order_by('-rating')
 		
 	def top10(self):
-		return self.order_by('-rating')[:10]
+		return self.exclude(user=1).order_by('-rating')[:10]
 		
+	def form_dictionary(self, user_1):
+		if (bool(user_1.userpic) == False):
+			userpic = self.get(nickname="DEBUG USER").userpic
+		else:
+			userpic = user_1.userpic
+		return {'name': user_1.nickname, 'userpic_path': userpic.url, 'id': user_1.user.pk, 'rating': user_1.rating}
+	
 	def user_info(self, user_1):
 		ext_user = self.get(user=user_1)
-		user_dict = {'name': ext_user.nickname, 'userpic_path': ext_user.userpic, 'id': user_1.pk, 'rating': ext_user.rating}
+		return self.form_dictionary(user_1=ext_user)
 
 class QuestionManager(models.Manager):
 	
 	def newest(self):
-		question_query = self.order_by('-rating')
-		return self.form_dictionary(query=question_query)
+		return self.order_by('-rating')
 		
 	def oldest(self):
 		return self.order_by('created')
@@ -35,17 +41,13 @@ class QuestionManager(models.Manager):
 		
 	def one_question(self, question):
 		author_dict = ExtendedAskUser.objects.user_info(user_1=question.author)
-		tags_list = []
-		tags = question.tags.all()
-		for tag in tags:
-			tag_dict = {'name': tag.tagName, 'rating': tag.rating}
-			tags_list.append(tag_dict)
+		tags_list = Tag.objects.form_dictionary(question.tags.all())
 		question_dict = { 'id': question.pk, 'author': author_dict, 'rating': question.rating, 'title': question.title, 'text': question.text, 'tags': tags_list, 'comments_amount': question.answers_amount, 'created': question.created }
 		return question_dict
 		
 	def one_question_answers(self, id):
 		question = self.get(pk=id)
-		question_answers_dict = {'question': self.one_question(question=question), 'answers': Answer.objects.form_dictionary(query=question.answers.all())}
+		question_answers_dict = {'question': self.one_question(question=question), 'answers': Answer.objects.best(query=question.answer_set.all())}
 		return question_answers_dict
 		
 	def form_dictionary(self, query):
@@ -57,13 +59,13 @@ class QuestionManager(models.Manager):
 		
 class AnswerManager(models.Manager):
 	
-	def best(self):
-		answer_query = self.order_by('-rating').order_by('-isBestAnswer')
-		return form_dictionary(query=answer_query)
+	def best(self, query):
+		answer_query = query.order_by('-rating').order_by('-isBestAnswer')
+		return self.form_dictionary(query=answer_query)
 		
 	def form_dictionary(self, query):
 		answers_list = []
-		for answer in query
+		for answer in query:
 			answers_list.append(self.one_answer(answer=answer))
 		return answers_list
 		
@@ -76,6 +78,15 @@ class TagManager(models.Manager):
 	
 	def best(self):
 		return self.order_by('-rating')
+		
+	def one_tag(self, tag):
+		return {'name': tag.tagName, 'rating': tag.rating}
+		
+	def form_dictionary(self, query):
+		tags_list = []
+		for tag in query:
+			tags_list.append(self.one_tag(tag=tag))
+		return tags_list
 		
 		
 ###
