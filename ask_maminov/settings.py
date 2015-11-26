@@ -109,6 +109,7 @@ USE_TZ = True
 
 #STATIC_URL = os.path.join(BASE_DIR, 'static/')
 STATIC_URL = '/static/'
+LOGIN_URL = '/login/'
 
 AUTHENTICATION_BACKENDS = (
 		'django.contrib.auth.backends.ModelBackend',

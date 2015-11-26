@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User # generic user
+from django.contrib.auth.models import User, AnonymousUser # generic user
 from django.utils import timezone	# Make every occurency to datetime.
 
 ###
@@ -22,8 +22,15 @@ class ExtendedUserManager(models.Manager):
 		return {'name': user_1.nickname, 'userpic_path': userpic.url, 'id': user_1.user.pk, 'rating': user_1.rating}
 	
 	def user_info(self, user_1):
+		if (type(user_1) == AnonymousUser):
+			return None
 		ext_user = self.get(user=user_1)
 		return self.form_dictionary(user_1=ext_user)
+		
+	def create_user(self, user_login, user_password, user_email, user_nickname, user_pic):
+		user = User.objects.create_user(user_login, user_email, user_password)
+		extuser = ExtendedAskUser(user=user, nickname=user_nickname, userpic=user_pic)
+		return extuser.save()
 
 class QuestionManager(models.Manager):
 	

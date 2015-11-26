@@ -3,6 +3,7 @@ from django.core.paginator import Paginator, EmptyPage
 from django.http import Http404
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.models import User, AnonymousUser # generic user
 from ask_app.models import *
 
 temporary_question_list = [
@@ -60,6 +61,15 @@ def paginate(objects, number):
 			'last_page': pages[-1],
 			}
 	
+def get_user(request):
+	#if ((request.user) == AnonymousUser):
+	if (request.user.is_authenticated):
+		return ExtendedAskUser.objects.user_info(user_1=request.user)
+	#if ((request.user) == User):
+	else:
+		return None
+		
+
 def right_block():
 	top_users_query = ExtendedAskUser.objects.top10()
 	top_users_list = []
@@ -67,20 +77,3 @@ def right_block():
 		top_users_list.append(ExtendedAskUser.objects.form_dictionary(user))
 	top_tags_list = Tag.objects.form_dictionary(Tag.objects.best())
 	return {'tags': top_tags_list, 'users': top_users_list}
-
-
-#	Copy-paste from source
-def login_forbidded(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None):
-	"""
-	Decorator for views that checks that the user is logged in, redirecting
-	to the log-in page if necessary.
-	"""
-	actual_decorator = user_passes_test(
-		lambda u: not u.is_authenticated(),	# "not" is the only change
-		login_url=login_url,
-		redirect_field_name=redirect_field_name
-	)
-	if function:
-		return actual_decorator(function)
-	return actual_decorator
-	

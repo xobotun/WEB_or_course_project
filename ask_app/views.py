@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect, Http404
 from django.contrib.auth.decorators import login_required
 from django.contrib import auth
 from ask_app.models import *
+from ask_app.forms import *
 
 # Create your views here.
 
@@ -15,32 +16,44 @@ def main_page(request):
 	context = {}
 	tql = paginate(question_list, 1)
 	question_list = Question.objects.form_dictionary(query=tql['questions'].object_list)
-	context.update({'title': 'Titled template', 'user': ExtendedAskUser.objects.user_info(user_1=request.user), 'question_list': question_list, 'paginator': tql, 'right_block': right_block()})
+	context.update({'title': 'Titled template', 'user': get_user(request), 'question_list': question_list, 'paginator': tql, 'right_block': right_block()})
 	return render(request, 'main_page.html', context)
-	# TODO: logic
 	
 # Done
 def	hot_questions(request):
-	user = temporary_question_list[0]['author']
+	question_list = Question.objects.hot()
 	context = {}
-	tql = paginate(temporary_question_list, 1)	# IRL will be select questions order by rating
-	context.update({'title': 'Titled template', 'user': user, 'question_list': tql['questions'], 'paginator': tql, 'right_block': right_block()})
+	tql = paginate(question_list, 1)
+	question_list = Question.objects.form_dictionary(query=tql['questions'].object_list)
+	context.update({'title': 'Titled template', 'user': get_user(request), 'question_list': question_list, 'paginator': tql, 'right_block': right_block()})
 	return render(request, 'main_page.html', context)
 
 # Done
 def	tag(request, tag_name):
-	user = temporary_question_list[0]['author']
+	question_list = Question.objects.filter(tags__tagName=tag_name)
 	context = {}
-	tql = paginate(temporary_question_list * 4, 1)	# IRL will be select tags where name like %
-	context.update({'title': 'Titled template', 'user': user, 'question_list': tql['questions'], 'paginator': tql, 'right_block': right_block()})
+	tql = paginate(question_list, 1)
+	question_list = Question.objects.form_dictionary(query=tql['questions'].object_list)
+	context.update({'title': 'Titled template', 'user': get_user(request), 'question_list': question_list, 'paginator': tql, 'right_block': right_block()})
 	return render(request, 'main_page.html', context)
 
 # Done
 def questions(request, page_num=1):
-	user = temporary_question_list[0]['author']
+	question_list = Question.objects.newest()
+	if (request.GET.get('sort') == 'date'):
+		if (request.GET.get('order') == 'desc'):
+			question_list = Question.objects.newest()
+		if (request.GET.get('order') == 'asc'):
+			question_list = Question.objects.oldest()
+	if (request.GET.get('sort') == 'rating'):
+		if (request.GET.get('order') == 'desc'):
+			question_list = Question.objects.hot()
+		if (request.GET.get('order') == 'asc'):
+			question_list = Question.objects.nonhot()
 	context = {}
-	tql = paginate(temporary_question_list * 4, page_num)
-	context.update({'title': 'Titled template', 'user': user, 'question_list': tql['questions'], 'paginator': tql, 'right_block': right_block()})
+	tql = paginate(question_list, page_num)
+	question_list = Question.objects.form_dictionary(query=tql['questions'].object_list)
+	context.update({'title': 'Titled template', 'user': get_user(request), 'question_list': question_list, 'paginator': tql, 'right_block': right_block()})
 	return render(request, 'main_page.html', context)
 
 # Done
@@ -54,48 +67,39 @@ def question(request, question_num):
 	return render(request, 'question_answers.html', context)
 
 # Done
-@login_forbidded
 def login(request):
-	#if request.POST:
-	#	username = request.POST.get('username')
-	#	password = request.POST.get('password')
-	#	user = auth.authenticate(username=username, password=password)
-	#	if user is not None:
-	#		return redirect(previous_page)
-	#	else
-	#		# return json that user data  is  incorrect.
-	#		pass
-	#else:
+	if request.POST:
+		form = LoginForm(request.POST)
+		if (form.auth_and_login(request=request)):
+			return HttpResponseRedirect("/")
+		else:
+			pass
+			raise Exception("Wrong pair")
+	else: # if GET
+		form = LoginForm()
 		context = {}
-		context.update({'title': 'Log in', 'right_block': right_block(), 'previous_page': request.GET.urlencode })
+		context.update({'title': 'Log in', 'right_block': right_block(), 'previous_page': request.GET.urlencode, 'form': form, 'user': get_user(request) })
 		return render(request, 'login.html', context)
 
 # Done
-@login_forbidded
 def register(request):
-	#if request.POST:
-	#	form = UserForm(request.POST)
-	#	if form.is_valid():
-	#		username = form.cleaned_data.get('username')
-	#		user = contrib.auth.models.User.objects.create_user(username, ...)
-	#		user.save()
-	#	# should be like
-	#	# if form.is_valid():
-	#	#	form.save()
-	#	## or better if save_form_if_valid():
-	#	## redicert('/')
-	#	## else error.
-	#else:
-	#	form = UserForm(request.POST)
+	if request.POST:
+		form = RegisterForm(request.POST)
+		if (form.save(request=request)):
+			return HttpResponseRedirect("/")
+		else:
+			pass
+	else:
+		form = RegisterForm()
 		context = {}
-		context.update({'title': 'Register', 'right_block': right_block(), 'form': UserForm()})
+		context.update({'title': 'Register', 'right_block': right_block(), 'previous_page': request.GET.urlencode, 'form': form, 'user': get_user(request) })
 		return render(request, 'register.html', context)
 
 # Done
 @login_required
 def ask(request):
-	user = temporary_question_list[0]['author']
 	context = {}
+	user = get_user(request)
 	context.update({'title': 'Ask your question', 'user': user, 'right_block': right_block()})
 	return render(request, 'ask.html', context)
 
@@ -104,13 +108,13 @@ def ask(request):
 def settings(request):
 	user = temporary_question_list[0]['author']
 	context = {}
-	context.update({'title': 'Settings', 'user': user, 'right_block': right_block()})
+	context.update({'title': 'Settings', 'user': get_user(request), 'right_block': right_block()})
 	return render(request, 'settings.html', context)
 
 # WIP
 @login_required
 def logout(request):
-	# Kinda user->logout, then redirect to main page.
+	auth.logout(request)
 	return HttpResponseRedirect("/")
 
 # WIP. And probably never will be ready...
