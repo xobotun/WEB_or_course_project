@@ -89,7 +89,7 @@ class AnswerManager(models.Manager):
 class TagManager(models.Manager):
 	
 	def best(self):
-		return self.order_by('-rating')
+		return self.order_by('-rating')[:20]
 		
 	def one_tag(self, tag):
 		return {'name': tag.tagName, 'rating': tag.rating}
