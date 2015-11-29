@@ -62,10 +62,25 @@ def question(request, question_num):
 		question_answers = Question.objects.one_question_answers(id=question_num)
 	except Question.DoesNotExist:
 		raise Http404
-	context = {}
-	context.update({'title': 'Answers to ' + question_answers['question']['title'], 'user': ExtendedAskUser.objects.user_info(user_1=request.user), 'question': question_answers['question'], 'answers': question_answers['answers'], 'right_block': right_block()})
-	return render(request, 'question_answers.html', context)
-
+	if request.POST:
+		form = AnswerForm(request.POST)
+		if (form.save(request=request, question_id=question_num)):
+			Question.objects.increase_answers_counter(id=question_num)
+			return HttpResponseRedirect("/")
+		else:
+			pass
+	else:
+		form = AnswerForm()
+		user = get_user(request)
+		context = {}
+		if (question_answers['question']['author']['id'] == user['id']):
+			draw_tick = True
+		else:
+			draw_tick = False
+		context.update({'title': 'Answers to ' + question_answers['question']['title'], 'draw_tick': draw_tick, 'form': form, 'user': user, 'question': question_answers['question'], 'answers': question_answers['answers'], 'right_block': right_block()})
+		#raise Exception(form)
+		return render(request, 'question_answers.html', context)
+		#
 # Done
 def login(request):
 	if request.POST:
@@ -98,10 +113,17 @@ def register(request):
 # Done
 @login_required
 def ask(request):
-	context = {}
-	user = get_user(request)
-	context.update({'title': 'Ask your question', 'user': user, 'right_block': right_block()})
-	return render(request, 'ask.html', context)
+	if request.POST:
+		form = QuestionForm(request.POST)
+		if (form.save(request=request)):
+			return HttpResponseRedirect("/")
+		else:
+			pass
+	else:
+		form = QuestionForm()
+		context = {}
+		context.update({'title': 'Ask your question', 'user': get_user(request), 'right_block': right_block(), 'form': form})
+		return render(request, 'ask.html', context)
 
 # Done
 @login_required

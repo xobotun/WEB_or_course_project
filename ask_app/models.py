@@ -19,7 +19,7 @@ class ExtendedUserManager(models.Manager):
 			userpic = self.get(nickname="DEBUG USER").userpic
 		else:
 			userpic = user_1.userpic
-		return {'name': user_1.nickname, 'userpic_path': userpic.url, 'id': user_1.user.pk, 'rating': user_1.rating}
+		return {'name': user_1.nickname, 'userpic_path': userpic.url, 'id': user_1.user.pk, 'rating': user_1.rating, 'is_authenticated': True}
 	
 	def user_info(self, user_1):
 		if (type(user_1) == AnonymousUser):
@@ -62,6 +62,11 @@ class QuestionManager(models.Manager):
 		for question in query:
 			questions_list.append(self.one_question(question=question))
 		return questions_list
+		
+	def increase_answers_counter(self, id):
+		question = self.get(pk=id)
+		question.answers_amount += 1
+		question.save()
 
 		
 class AnswerManager(models.Manager):

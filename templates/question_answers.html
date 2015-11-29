@@ -8,7 +8,16 @@
 {% block content %}
 	{% include "elements/question.html" with question=question %}
 	<hr>
-	{% for answer in answers %}
-		{% include "elements/answer.html" with answer=answer %}
-	{% endfor %}
+	{% if answers %}
+		{% for answer in answers %}
+			{% include "elements/answer.html" with answer=answer draw_tick=draw_tick %}
+		{% endfor %}
+	{% else %}
+	<div class="row">
+		<p class="h3 col-sm-offset-3 col-lg-offset-2">No answers yet. Be first one!<p>
+	</div>
+	{% endif %}
+	{% if user.is_authenticated %}
+		{% include "elements/answer_form.html" with form=form %}
+	{% endif %}
 {% endblock %}

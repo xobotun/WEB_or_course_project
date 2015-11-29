@@ -63,7 +63,7 @@ def paginate(objects, number):
 	
 def get_user(request):
 	#if ((request.user) == AnonymousUser):
-	if (request.user.is_authenticated):
+	if (request.user.is_authenticated()):
 		return ExtendedAskUser.objects.user_info(user_1=request.user)
 	#if ((request.user) == User):
 	else:

@@ -3,7 +3,7 @@ from django.conf.urls import url
 urlpatterns = [
 	url(r'^$', 'ask_app.views.main_page', name='main_page'),
 	url(r'^hot/$', 'ask_app.views.hot_questions', name='hot_questions'),
-	url(r'^tag/(?P<tag_name>[A-Za-z0-9]+)/$', 'ask_app.views.tag', name='tag'),
+	url(r'^tag/(?P<tag_name>[A-Za-z0-9_]+)/$', 'ask_app.views.tag', name='tag'),
 	url(r'^questions/(?P<page_num>\d+)/$', 'ask_app.views.questions', name='questions'),
 	url(r'^questions/$', 'ask_app.views.questions', name='questions'),
 	url(r'^question/(?P<question_num>\d+)/$', 'ask_app.views.question', name='question'),

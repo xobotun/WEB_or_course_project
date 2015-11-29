@@ -1,9 +1,9 @@
 <div class="row">
-	<p class="h1 col-sm-offset-3 col-lg-offset-2">New Question<p>
 	<hr>
+	<p class="h3 col-sm-offset-3 col-lg-offset-2">Post Answer<p>
 </div>
 
-<form class="form-horizontal row" action="{% url 'ask' %}" method="post">
+<form class="form-horizontal row" action="{% url 'question' question.id %}" method="post">
 	{% csrf_token %}
 	{% for field in form.visible_fields %}
 	<div class="form-group">
@@ -13,7 +13,7 @@
 	{% endfor %}	
 	<div class="form-group">
 		<div class="col-sm-offset-3 col-lg-offset-2 col-sm-6">
-			<button type="submit" class="btn btn-success">Ask!</button>
+			<button type="submit" class="btn btn-success">Answer!</button>
 		</div>
 	</div>
 </form>
