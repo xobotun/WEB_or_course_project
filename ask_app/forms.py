@@ -58,14 +58,14 @@ class RegisterForm(forms.Form):
 		try:
 			user = User.objects.get(username=username) 
 		except User.DoesNotExist:
-			pass
-		if (user):
+			user = None
+		if (user is not None):
 			error_dict['login_exist'] = username
 		try:
 			extuser = ExtendedAskUser.objects.get(nickname=nickname)
 		except ExtendedAskUser.DoesNotExist:
-			pass
-		if (extuser):
+			extuser = None
+		if (extuser is not None):
 			error_dict['nickname_exist'] = nickname
 		return error_dict
 		
