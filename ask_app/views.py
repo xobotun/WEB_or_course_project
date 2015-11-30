@@ -73,10 +73,11 @@ def question(request, question_num):
 		form = AnswerForm()
 		user = get_user(request)
 		context = {}
-		if (question_answers['question']['author']['id'] == user['id']):
-			draw_tick = True
-		else:
-			draw_tick = False
+		draw_tick = False
+		if user is not None:
+			if (question_answers['question']['author']['id'] == user['id']):
+				draw_tick = True
+			
 		context.update({'title': 'Answers to ' + question_answers['question']['title'], 'draw_tick': draw_tick, 'form': form, 'user': user, 'question': question_answers['question'], 'answers': question_answers['answers'], 'right_block': right_block()})
 		#raise Exception(form)
 		return render(request, 'question_answers.html', context)
