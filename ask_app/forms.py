@@ -35,8 +35,9 @@ class RegisterForm(forms.Form):
 	def save(self, request):
 		if (self.is_valid()):
 			error_dict = self.checkDuplicates(username=self.cleaned_data['login'], nickname=self.cleaned_data['nickname'])
-			if (error_dict):
-				return False
+			#if (error_dict):
+				#self.errors = error_dict
+				#raise Exception(error_dict)
 			user = User.objects.create_user(username=self.cleaned_data['login'], email=self.cleaned_data['email'], password=self.cleaned_data['password'])
 			#except IntegrityError:
 			#	pass # User already exist!
@@ -68,6 +69,12 @@ class RegisterForm(forms.Form):
 		if (extuser is not None):
 			error_dict['nickname_exist'] = nickname
 		return error_dict
+		
+	def checkIfDuplicates(self):
+		if (self.is_valid()):
+			return self.checkDuplicates(username=self.cleaned_data['login'], nickname=self.cleaned_data['nickname'])
+		else:
+			return {}
 		
 		
 class QuestionForm(forms.Form):

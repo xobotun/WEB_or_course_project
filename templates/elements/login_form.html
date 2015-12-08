@@ -3,6 +3,16 @@
 	<hr>
 </div>
 
+{% if errors %}
+<div class="row">
+	<ul>
+	{% for error in errors %}
+		{{error}}
+	{% endfor %}
+	</ul>
+</div>
+{% endif %}
+
 
 <form class="form-horizontal row" action="{% url 'login' %}" method="post">
 	{% csrf_token %}

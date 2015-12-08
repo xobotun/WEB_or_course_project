@@ -62,69 +62,67 @@ def question(request, question_num):
 		question_answers = Question.objects.one_question_answers(id=question_num)
 	except Question.DoesNotExist:
 		raise Http404
+	errors_dict = []
+	form = AnswerForm()
 	if request.POST:
 		form = AnswerForm(request.POST)
 		if (form.save(request=request, question_id=question_num)):
 			Question.objects.increase_answers_counter(id=question_num)
-			return HttpResponseRedirect("/")
+			return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 		else:
-			pass
-	else:
-		form = AnswerForm()
-		user = get_user(request)
-		context = {}
-		draw_tick = False
-		if user is not None:
-			if (question_answers['question']['author']['id'] == user['id']):
-				draw_tick = True
-			
-		context.update({'title': 'Answers to ' + question_answers['question']['title'], 'draw_tick': draw_tick, 'form': form, 'user': user, 'question': question_answers['question'], 'answers': question_answers['answers'], 'right_block': right_block()})
-		#raise Exception(form)
-		return render(request, 'question_answers.html', context)
-		#
+			errors_dict = form.errors
+	user = get_user(request)
+	context = {}
+	draw_tick = False
+	if user is not None:
+		if (question_answers['question']['author']['id'] == user['id']):
+			draw_tick = True
+		
+	context.update({'title': 'Answers to ' + question_answers['question']['title'], 'draw_tick': draw_tick, 'form': form, 'user': user, 'question': question_answers['question'], 'answers': question_answers['answers'], 'right_block': right_block(), 'errors': errors_dict})
+	return render(request, 'question_answers.html', context)
+	
 # Done
 def login(request):
+	form = LoginForm()
+	errors_dict = []
 	if request.POST:
 		form = LoginForm(request.POST)
 		if (form.auth_and_login(request=request)):
-			return HttpResponseRedirect("/")
+			return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 		else:
-			pass
-			raise Exception("Wrong pair")
-	else: # if GET
-		form = LoginForm()
-		context = {}
-		context.update({'title': 'Log in', 'right_block': right_block(), 'previous_page': request.GET.urlencode, 'form': form, 'user': get_user(request) })
-		return render(request, 'login.html', context)
+			errors_dict = form.errors
+	context = {}
+	context.update({'title': 'Log in', 'right_block': right_block(), 'previous_page': request.GET.urlencode, 'form': form, 'user': get_user(request), 'errors': errors_dict})
+	return render(request, 'login.html', context)
 
 # Done
 def register(request):
+	form = RegisterForm()
+	errors_dict = []
 	if request.POST:
 		form = RegisterForm(request.POST)
 		if (form.save(request=request)):
-			return HttpResponseRedirect("/")
+			return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 		else:
-			pass
-	else:
-		form = RegisterForm()
-		context = {}
-		context.update({'title': 'Register', 'right_block': right_block(), 'previous_page': request.GET.urlencode, 'form': form, 'user': get_user(request) })
-		return render(request, 'register.html', context)
+			errors_dict = form.errors# + form.checkIfDuplicates()
+	context = {}
+	context.update({'title': 'Register', 'right_block': right_block(), 'previous_page': request.GET.urlencode, 'form': form, 'user': get_user(request), 'errors': errors_dict })
+	return render(request, 'register.html', context)
 
 # Done
 @login_required
 def ask(request):
+	form = QuestionForm()
+	errors_dict = []
 	if request.POST:
 		form = QuestionForm(request.POST)
 		if (form.save(request=request)):
-			return HttpResponseRedirect("/")
+			return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 		else:
-			pass
-	else:
-		form = QuestionForm()
-		context = {}
-		context.update({'title': 'Ask your question', 'user': get_user(request), 'right_block': right_block(), 'form': form})
-		return render(request, 'ask.html', context)
+			errors_dict = form.errors
+	context = {}
+	context.update({'title': 'Ask your question', 'user': get_user(request), 'right_block': right_block(), 'form': form, 'errors': errors_dict})
+	return render(request, 'ask.html', context)
 
 # Done
 @login_required

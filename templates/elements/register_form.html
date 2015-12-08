@@ -1,8 +1,18 @@
 <div class="row row-no-margin">
 	<p class="h1 col-sm-offset-3">Register<p>
+	<hr>
 </div>
 
-<hr>
+{% if errors %}
+<div class="row">
+	<ul>
+	{% for error in errors %}
+		{{error}}
+	{% endfor %}
+	</ul>
+</div>
+{% endif %}
+
 
 <form class="form-horizontal" action="{% url 'register' %}" method="post" enctype="multipart/form-data">
 	{% csrf_token %}

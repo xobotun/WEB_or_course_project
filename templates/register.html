@@ -6,5 +6,5 @@
 	{% include "elements/navbar.html" with current_user=user %}
 {% endblock %}
 {% block content %}
-	{% include "elements/register_form.html" %}
+	{% include "elements/register_form.html" with form=form errors=errors %}
 {% endblock %}

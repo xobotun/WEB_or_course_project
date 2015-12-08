@@ -18,6 +18,6 @@
 	</div>
 	{% endif %}
 	{% if user.is_authenticated %}
-		{% include "elements/answer_form.html" with form=form %}
+		{% include "elements/answer_form.html" with form=form errors=errors %}
 	{% endif %}
 {% endblock %}

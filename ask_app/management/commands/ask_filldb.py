@@ -1,27 +1,34 @@
-from django.core.management.base import BaseCommand
+from django.core.management.base import NoArgsCommand
 from ask_app.forms import *
 from ask_app.models import *
 from random import randint
 
-class Command(BaseCommand):
+TAG_AMT = 10
+USR_AMT = 10
+QUE_AMT = 100
+ANS_AMT = 1000
+QVT_AMT = 1000
+AVT_AMT = 2000
+
+class Command(NoArgsCommand):
 	help = "One time run command to fill database with 10k tags, 10k users, 100k questions, 1M answers and 2M votes...\n\nUser password is 123, by the way."
 	
 	def handle_noargs(self, **options):
-		self.add10ktags()
-		self.add10kusers()
-		self.add100kquestions()
-		self.add1Manswers()
-		self.add3Mvotes()
-		slef.updateRatings()
+		#self.add10ktags()
+		#self.add10kusers()
+		#self.add100kquestions()
+		#self.add1Manswers()
+		#self.add3Mvotes()
+		self.updateRatings()
 		
 	def add10ktags(self):
-		for i in range (1, 10000):
+		for i in range (1, TAG_AMT):
 			name = "Tag_" + `i`
 			tag = Tag(tagName=name)
 			tag.save()
 	
 	def add10kusers(self):
-		for i in range (1, 10000):
+		for i in range (1, USR_AMT):
 			login = "User_" + `i`
 			email = "user_" + `i` + "@users.com"
 			nickname = "User " + `i`
@@ -34,8 +41,8 @@ class Command(BaseCommand):
 	def add100kquestions(self):
 		tag_amount = Tag.objects.all().count()
 		user_amount = ExtendedAskUser.objects.all().count()
-		for i in range (1, 100000):
-			user_number = randint(1, user_amount) # Except root user №1.
+		for i in range (1, QUE_AMT):
+			user_number = randint(1, user_amount)
 			user = User.objects.get(pk=user_number)
 			
 			tags_amount = randint(1,3)
@@ -49,8 +56,8 @@ class Command(BaseCommand):
 				tag = Tag.objects.get(pk=tag_number_list[j-1])
 				tags.append(tag)
 			
-			title = "Question №" + `i`
-			text = "Question №"+`i`+".\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+			title = "Question number " + `i`
+			text = "Question number "+`i`+".\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
 			
 			question = Question(author = user, title = title, text = text)
 			question.save()
@@ -59,14 +66,14 @@ class Command(BaseCommand):
 	def add1Manswers(self):
 		question_amount = Question.objects.all().count()
 		user_amount = ExtendedAskUser.objects.all().count()
-		for i in range (1, 1000000):
-			user_number = randint(2, user_amount) # Except root user №1.
+		for i in range (1, ANS_AMT):
+			user_number = randint(2, user_amount)
 			user = User.objects.get(pk=user_number)
 		
 			question_number = randint(1, question_amount)
 			question = Question.objects.get(pk=question_number)
 					
-			text = "Answer №"+`i`+".\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+			text = "Answer number "+`i`+".\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
 			
 			answer = Answer(author = user, text = text, question = question)
 			answer.save()
@@ -74,33 +81,33 @@ class Command(BaseCommand):
 	def add3Mvotes(self):
 		question_amount = Question.objects.all().count()
 		user_amount = ExtendedAskUser.objects.all().count()
-		answer_amount = Answer.object.all().count()
-		for i in range (1, 1000000):
-			user_number = randint(2, user_amount) # Except root user №1.
+		answer_amount = Answer.objects.all().count()
+		for i in range (1, QVT_AMT):
+			user_number = randint(2, user_amount)
 			user = User.objects.get(pk=user_number)
 		
 			question_number = randint(1, question_amount)
 			question = Question.objects.get(pk=question_number)
 		
-			vote_sign = randint(0, 1) # 0 == Like, 1 == Dislike
+			vote_sign = randint(0, 1)
 	
 			QuestionVote.objects.create(user=user, question=question, isDislike = vote_sign)
 		
-		for i in range (1, 2000000):
-			user_number = randint(2, user_amount) # Except root user №1.
+		for i in range (1, AVT_AMT):
+			user_number = randint(2, user_amount)
 			user = User.objects.get(pk=user_number)
 		
 			answer_number = randint(1, answer_amount)
 			answer = Answer.objects.get(pk=answer_number)
 		
-			vote_sign = randint(0, 1) # 0 == Like, 1 == Dislike
+			vote_sign = randint(0, 1)
 			
 			AnswerVote.objects.create(user=user, answer=answer, isDislike = vote_sign)
 				
 	def updateRatings(self):
 		question_amount = Question.objects.all().count()
 		user_amount = ExtendedAskUser.objects.all().count()
-		answer_amount = Answer.object.all().count()
+		answer_amount = Answer.objects.all().count()
 		tag_amount = Tag.objects.all().count()
 		
 		for i in range (1, question_amount):
@@ -123,7 +130,7 @@ class Command(BaseCommand):
 			
 		for i in range(1, tag_amount):
 			tag = Tag.objects.get(pk=i)
-			tag_questions = tag.question_set
+			tag_questions = tag.question_set.all()
 			rating = 0
 			for question in tag_questions:
 				rating += question.rating
@@ -133,15 +140,15 @@ class Command(BaseCommand):
 			
 		for i in range(1, user_amount):
 			user = User.objects.get(pk=i)
-			user_questions = user.question_set
-			user_answers = user.answer_set
+			user_questions = user.question_set.all()
+			user_answers = user.answer_set.all()
 			qrating = 0
 			arating = 0
 			for question in user_questions:
 				qrating += question.rating
 			for answer in user_answers:
 				arating += answer.rating
-			eauser = ExtendedAskUser.get(user=user)
+			eauser = ExtendedAskUser.objects.get(user=user)
 			eauser.rating = qrating + arating
 			eauser.save()
 			
