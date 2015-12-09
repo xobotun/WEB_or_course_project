@@ -38,7 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-	'ask_app',
+    'ask_app',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -49,16 +49,19 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.security.SecurityMiddleware',
+    #'django.middleware.security.SecurityMiddleware',
 )
 
 #ROOT_URLCONF = os.path.join(BASE_DIR, 'ask_maminov.urls')
 ROOT_URLCONF = 'ask_maminov.urls'
 
+TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        #'DIRS': [os.path.join(BASE_DIR, 'templates')],
+	#'DIRS': ['/yd/Learning/Shared/ask/ask_project_container/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

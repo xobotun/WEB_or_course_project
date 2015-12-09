@@ -3,22 +3,22 @@ from ask_app.forms import *
 from ask_app.models import *
 from random import randint
 
-TAG_AMT = 10
-USR_AMT = 10
-QUE_AMT = 100
-ANS_AMT = 1000
-QVT_AMT = 1000
-AVT_AMT = 2000
+TAG_AMT = 10000
+USR_AMT = 10000
+QUE_AMT = 100000
+ANS_AMT = 1000000
+QVT_AMT = 1000000
+AVT_AMT = 2000000
 
 class Command(NoArgsCommand):
 	help = "One time run command to fill database with 10k tags, 10k users, 100k questions, 1M answers and 2M votes...\n\nUser password is 123, by the way."
 	
 	def handle_noargs(self, **options):
-		#self.add10ktags()
-		#self.add10kusers()
-		#self.add100kquestions()
-		#self.add1Manswers()
-		#self.add3Mvotes()
+		self.add10ktags()
+		self.add10kusers()
+		self.add100kquestions()
+		self.add1Manswers()
+		self.add3Mvotes()
 		self.updateRatings()
 		
 	def add10ktags(self):
