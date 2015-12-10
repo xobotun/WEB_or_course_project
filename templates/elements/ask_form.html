@@ -3,22 +3,21 @@
 	<hr>
 </div>
 
-{% if errors %}
-<div class="row">
-	<ul>
-	{% for error in errors %}
-		{{error}}
-	{% endfor %}
-	</ul>
-</div>
-{% endif %}
-
 <form class="form-horizontal row" action="{% url 'ask' %}" method="post">
 	{% csrf_token %}
 	{% for field in form.visible_fields %}
 	<div class="form-group">
 		<label for="inputLogin" class="col-sm-3 col-lg-2 control-label">{{field.label}}</label>
 		{{ field }}
+		{% if field.errors %}
+			<div class="alert alert-danger col-sm-3">
+				
+				{% for error in field.errors %}
+					{{error}}
+				{% endfor %}
+				
+			</div>
+		{% endif %}
 	</div>
 	{% endfor %}	
 	<div class="form-group">

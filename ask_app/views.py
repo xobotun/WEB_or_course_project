@@ -136,7 +136,14 @@ def settings(request):
 @login_required
 def logout(request):
 	auth.logout(request)
-	return HttpResponseRedirect("/")
+	return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+#@login kinda required
+def ajax(request):
+	if request.POST or request.GET:
+		raise Http404
+	#switch for ajax type and delegate to different functions
+	pass
 
 # WIP. And probably never will be ready...
 def search(request, search_string):

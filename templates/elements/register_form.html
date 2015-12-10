@@ -3,17 +3,6 @@
 	<hr>
 </div>
 
-{% if errors %}
-<div class="row">
-	<ul>
-	{% for error in errors %}
-		{{error}}
-	{% endfor %}
-	</ul>
-</div>
-{% endif %}
-
-
 <form class="form-horizontal" action="{% url 'register' %}" method="post" enctype="multipart/form-data">
 	{% csrf_token %}
 	<input type="hidden" value="{{ previous_page }}" name="previous_page">
@@ -21,6 +10,15 @@
 		<div class="form-group">
 			<label for="{{ field.name }}" class="col-sm-3 control-label">{{ field.label }}</label>
 			{{ field }}
+			{% if field.errors %}
+				<div class="alert alert-danger col-sm-3">
+					
+					{% for error in field.errors %}
+						{{error}}
+					{% endfor %}
+					
+				</div>
+			{% endif %}
 		</div>
 	{% endfor %}
 	<div class="form-group row row-no-margin">

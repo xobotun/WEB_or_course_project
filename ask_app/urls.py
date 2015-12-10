@@ -13,5 +13,5 @@ urlpatterns = [
 	url(r'^settings/$', 'ask_app.views.settings', name='settings'),
 	url(r'^search/$', 'ask_app.views.search', name='search'),
 	url(r'^logout/$', 'ask_app.views.logout', name='logout'),
-	
+	url(r'^ajax/$', 'ask_app.views.ajax'),
 ]
