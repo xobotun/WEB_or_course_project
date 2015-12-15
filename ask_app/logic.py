@@ -70,3 +70,97 @@ def get_previous_page(request):
 	except KeyError:
 		return '/'
 	return pre_page
+	
+def attempt_to_vote(ea_user, data):
+		if ea_user == None:
+			return ajax_dict(type='error', message='You need to be logged in to do that!')
+		else:
+			if data.get('type') == 'question_vote': # Should it be a seperate function?
+				quid = 0
+				vote_isDislike = False
+				try:
+					quid = int(data.get('message[question_id]'))
+				except ValueError:
+					return erroneous_ajax_dict()
+				if data.get('message[vote_sign]') == 'up':
+					vote_isDislike = False
+				elif data.get('message[vote_sign]') != 'down':
+					vote_isDislike = True
+				else:
+					return erroneous_ajax_dict()
+				return question_vote(user=ea_user.user, id=quid, sign=vote_isDislike)
+			elif data.get('type') == 'answer_vote': # Should it be a seperate function?
+				quid = 0
+				aid = 0
+				vote_isDislike = False
+				try:
+					quid = int(data.get('message[question_id]'))
+					aid = int(data.get('message[answer_id]'))
+				except ValueError:
+					return erroneous_ajax_dict()
+				if data.get('message[vote_sign]') == 'up':
+					vote_isDislike = False
+				elif data.get('message[vote_sign]') != 'down':
+					vote_isDislike = True
+				else:
+					return erroneous_ajax_dict()
+				return answer_vote(user=ea_user.user, id=aid, sign=vote_isDislike)
+
+		
+def question_vote(user, id, sign):
+	#qtype = 'error'
+	#qmessage = 'Sum Thung Wong'
+	qtype = 'success'
+	qmessage = 'You have succesfully voted!'
+	question = Question.objects.get(pk=id)
+	if sign:
+		rating_delta = 1 
+	else:
+		rating_delta = -1
+	try:
+		user_vote = question.questionvote_set.filter(user__exact=user)[0]
+		if user_vote.isDislike == sign:
+			qtype = 'error'
+			qmessage = 'You have already voted!'
+		if user_vote.isDislike:
+			rating_delta += 1 # -1 If liked, +1 if disliked, 0 if had never voted. Will be added to question.rating
+		else:
+			rating_delta += -1
+		#question.questionvote_set.remove(user_vote)
+		user_vote.delete()
+	except IndexError:
+		pass
+	qv = QuestionVote.objects.create(user=user, question=question, isDislike = sign)
+	question.questionvote_set.add(qv)
+	question.rating += rating_delta
+	question.save()
+	return ajax_dict(type=qtype, message={'text': qmessage, 'new_rating': question.rating})
+	
+def answer_vote(user, id, sign):
+	#qtype = 'error'
+	#qmessage = 'Sum Thung Wong'
+	atype = 'success'
+	amessage = 'You have succesfully voted!'
+	answer = Answer.objects.get(pk=id)
+	if sign:
+		rating_delta = 1 
+	else:
+		rating_delta = -1
+	try:
+		user_vote = answer.answervote_set.filter(user=user)[0]
+		if user_vote.isDislike == sign:
+			atype = 'error'
+			amessage = 'You have already voted!'
+		if user_vote.isDislike:
+			rating_delta += 1 # -1 If liked, +1 if disliked, 0 if had never voted. Will be added to question.rating
+		else:
+			rating_delta += -1
+		#question.questionvote_set.remove(user_vote)
+		user_vote.delete()
+	except IndexError:
+		pass
+	av = AnswerVote.objects.create(user=user, answer=answer, isDislike = sign)
+	answer.answervote_set.add(av)
+	answer.rating += rating_delta
+	answer.save()
+	return ajax_dict(type=atype, message={'text': amessage, 'new_rating': answer.rating})

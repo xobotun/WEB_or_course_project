@@ -10,7 +10,7 @@
 			<img class="avatar-holder-100" src="{{question.author.userpic_path}}">
 			<br><a href="{{question.author.id}}">{{question.author.name}}</a><br>
 			<div class="btn-group nowrap">
-				<a href="{{question.author.id}}" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-arrow-up vote-up"></span></a><span class="btn btn-default btn-xs">{{question.rating}}</span><a href="#" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-arrow-down vote-down"></span></a>
+				<a href="#" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-arrow-up vote-up"></span></a><span class="btn btn-default btn-xs">{{question.rating}}</span><a href="#" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-arrow-down vote-down"></span></a>
 			</div>
 		</div>
 	  
@@ -32,4 +32,5 @@
 		{% endif %}
 	</div>
 		
+	{% include "elements/question.js" with quid=question.id %}
 </div>

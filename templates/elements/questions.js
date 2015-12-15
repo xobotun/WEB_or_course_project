@@ -27,11 +27,11 @@
 		}
 	});
 		
-	function ajax_answer_vote(aid, sign){
+	function ajax_question_vote(quid, sign){
 		$.ajax({
 			url : "/ajax/", // the endpoint
 			type : "POST", // http method
-			data : { type: 'answer_vote', message: {question_id: '{{quid}}', answer_id: aid, vote_sign: sign} }, // data sent with the post request
+			data : { type: 'question_vote', message: {question_id: quid, vote_sign: sign} }, // data sent with the post request
 
 			// handle a successful response
 			success : function(json) {

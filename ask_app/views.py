@@ -152,9 +152,9 @@ def ajax(request):
 	if request.GET:
 		pass # Check if username exists
 	elif request.POST:
-		post_data = request.POST.get('post_data')
+		post_data = request.POST
 		if post_data.get('type') == 'question_vote' or post_data.get('type') == 'answer_vote':
-			response_dict = ExtendedAskUser.objects.attempt_to_vote(ea_user=get_user(request), data=post_data)
+			response_dict = attempt_to_vote(ea_user=get_user(request), data=post_data)
 	else:
 		raise Http404
 	return JsonResponse(response_dict)

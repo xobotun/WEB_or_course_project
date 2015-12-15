@@ -14,18 +14,18 @@ class Command(NoArgsCommand):
 	help = "One time run command to fill database with 10k tags, 10k users, 100k questions, 1M answers and 2M votes...\n\nUser password is 123, by the way."
 	
 	def handle_noargs(self, **options):
-		#print "~~~Adding 10 000 tags~~~"
-		#self.add10ktags()
-		#print "~~~Adding 10 000 users~~~"
-		#self.add10kusers()
-		#print "~~~Adding 100 000 qusetions~~~"
-		#self.add100kquestions()
-		#print "~~~Adding 1 000 000 answers~~~"
-		#self.add1Manswers()
-		#print "~~~Adding 3 000 000 votes~~~"
-		#self.add3Mvotes()
-		print "~~~Applying fixes~~~"
-		self.addFix()
+		print "~~~Adding 10 000 tags~~~"
+		self.add10ktags()
+		print "~~~Adding 10 000 users~~~"
+		self.add10kusers()
+		print "~~~Adding 100 000 qusetions~~~"
+		self.add100kquestions()
+		print "~~~Adding 1 000 000 answers~~~"
+		self.add1Manswers()
+		rint "~~~Adding 3 000 000 votes~~~"
+		self.add3Mvotes()
+		#print "~~~Applying fixes~~~"
+		#self.addFix()
 		print "~~~Updating ratings~~~"
 		self.updateRatings()
 		print "~~~Done!~~~"

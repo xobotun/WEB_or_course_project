@@ -32,41 +32,6 @@ class ExtendedUserManager(models.Manager):
 		user = User.objects.create_user(user_login, user_email, user_password)
 		extuser = ExtendedAskUser(user=user, nickname=user_nickname, userpic=user_pic)
 		return extuser.save()
-		
-#	def attempt_to_vote(self, ea_user, data):
-#		if ea_user == None:
-#			return ajax_dict(type='error', message='You need to be logged in to do that!')
-#		else:
-#			if data.get('type') == 'question_vote': # Should it be a seperate function?
-#				quid = 0
-#				vote_isDislike = False
-#				try:
-#					quid = int(data.get('message').get('question_id'))
-#				except ValueError:
-#					return erroneous_ajax_dict()
-#				if data.get('message').get('vote_sign') == 'up':
-#					vote_isDislike = False
-#				elif data.get('message').get('vote_sign') != 'down':
-#					vote_isDislike = True
-#				else:
-#					return erroneous_ajax_dict()
-#				return QuestionManager.vote(user=ea_user.user, id=quid, sign=vote_isDislike)
-#			elif data.get('type') == 'answer_vote': # Should it be a seperate function?
-#				quid = 0
-#				aid = 0
-#				vote_isDislike = False
-#				try:
-#					quid = int(data.get('message').get('question_id'))
-#					aid = int(data.get('message').get('answer_id'))
-#				except ValueError:
-#					return erroneous_ajax_dict()
-#				if data.get('message').get('vote_sign') == 'up':
-#					vote_isDislike = False
-#				elif data.get('message').get('vote_sign') != 'down':
-#					vote_isDislike = True
-#				else:
-#					return erroneous_ajax_dict()
-#				return AnswerManager.vote(user=ea_user.user, id=quid, sign=vote_isDislike)
 				
 
 class QuestionManager(models.Manager):
@@ -105,37 +70,6 @@ class QuestionManager(models.Manager):
 		question.answers_amount += 1
 		question.save()
 		
-#	def vote(self, user, id, sign):
-#		#qtype = 'error'
-#		#qmessage = 'Sum Thung Wong'
-#		qtype = 'success'
-#		qmessage = 'You have succesfully voted!'
-#		question = self.get(pk=id)
-#		if sign:
-#			rating_delta = 1 
-#		else:
-#			rating_delta = -1
-#		try:
-#			user_vote = question.questionvote_set.filter(user__exact=user)[0]
-#			if user_vote.isDislike == sign:
-#				qtype = 'error'
-#				qmessage = 'You have already voted!'
-#			if user_vote.isDislike:
-#				rating_delta += 1 # -1 If liked, +1 if disliked, 0 if had never voted. Will be added to question.rating
-#			else:
-#				rating_delta += -1
-#			#question.questionvote_set.remove(user_vote)
-#			user_vote.delete()
-#		except QuestionVote.DoesNotExist:
-#			pass
-#		qv = QuestionVote.objects.create(user=user, question=question, isDislike = sign)
-#		question.questionvote_set.add(qv)
-#		question.rating += rating_delta
-#		question.save()
-#		return ajax_dict(type=qtype, message=qmessage)
-		
-
-		
 class AnswerManager(models.Manager):
 	
 	def best(self, query):
@@ -155,35 +89,7 @@ class AnswerManager(models.Manager):
 		author_dict = ExtendedAskUser.objects.user_info(user_1=answer.author)
 		answer_dict = { 'id': answer.pk, 'author': author_dict, 'rating': answer.rating, 'text': answer.text, 'created': answer.created, 'isBestAnswer': answer.isBestAnswer }
 		return answer_dict
-		
-#	def vote(self, user, id, sign):
-#		#qtype = 'error'
-#		#qmessage = 'Sum Thung Wong'
-#		atype = 'success'
-#		amessage = 'You have succesfully voted!'
-#		answer = self.get(pk=id)
-#		if sign:
-#			rating_delta = 1 
-#		else:
-#			rating_delta = -1
-#		try:
-#			user_vote = answer.answervote_set.filter(user__exact=user)[0]
-#			if user_vote.isDislike == sign:
-#				atype = 'error'
-#				amessage = 'You have already voted!'
-#			if user_vote.isDislike:
-#				rating_delta += 1 # -1 If liked, +1 if disliked, 0 if had never voted. Will be added to question.rating
-#			else:
-#				rating_delta += -1
-#			#question.questionvote_set.remove(user_vote)
-#			user_vote.delete()
-#		except AnswerVote.DoesNotExist:
-#			pass
-#		av = AnswerVote.objects.create(user=user, answer=answer, isDislike = sign)
-#		answer.answervote_set.add(av)
-#		answer.rating += rating_delta
-#		answer.save()
-#		return ajax_dict(type=atype, message=amessage)
+	
 		
 class TagManager(models.Manager):
 	

@@ -15,7 +15,7 @@
 	{% for user in users %}
 	<div class="row">
 		<div class="col-sm-4 col-md-4 col-lg-3 col-no-padding"><img class="avatar-holder-50" src="{{user.userpic_path}}"></div>
-		<div class="h3 col-sm-8 col-md-8 col-lg-9 col-no-padding"><a href="/wip/user/{{user.id}}" class="">{{user.name}}</a></div>
+		<div class="h3 col-sm-8 col-md-8 col-lg-9 col-no-padding"><a href="/wip/user/{{user.id}}" class="">{{user.name}}</a><span class="small-text-under-question">      {{user.rating}}</span></div>
 	</div>
 	{% endfor %}
 </div>
