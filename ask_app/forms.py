@@ -91,7 +91,8 @@ class QuestionForm(forms.Form):
 			)
 			question.save()
 			question.tags.add(*self.checkTags(tags_string=self.cleaned_data['tags']))
-			return True
+			#return True
+			return question.pk
 		return False
 		
 	def checkTags(self, tags_string):
@@ -118,5 +119,6 @@ class AnswerForm(forms.Form):
 				question = question
 			)
 			answer.save()
-			return True
+			#return True
+			return answer.pk
 		return False

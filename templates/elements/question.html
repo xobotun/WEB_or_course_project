@@ -24,7 +24,7 @@
 		<div class="col-sm-1 col-md-1 col-sm-offset-2 col-md-offset-2">{{question.created|date:'d.m.Y'}}</div>
 		<div class="col-sm-1 col-md-3 col-sm-offset-2 col-md-offset-2"><a href="{% url 'question' question.id %}">Answers({{question.comments_amount}})</a></div>
 		{% if question.tags %}
-		<div class="col-sm-3 col-md-3 col-sm-offset-1 col-md-offset-1">Tags: 
+		<div class="col-sm-4 col-md-4">Tags: 
 		{% for tag in question.tags %}
 			<a href="{% url 'tag' tag.name %}">{{tag.name}}</a><span>  </span>
 		{% endfor %}

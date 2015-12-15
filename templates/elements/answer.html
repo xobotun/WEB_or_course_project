@@ -1,4 +1,4 @@
-<div class="answer row">
+<div class="answer row" id="answer_{{answer.id}}">
 
 		<div class="col-sm-3 col-md-3 col-lg-2 correct-answer-checkbox">
 			{% if draw_tick %}<span class="glyphicon glyphicon-ok correct-answer-checkbox-inner-thing-unchecked"></span>{% endif %}
@@ -10,7 +10,7 @@
 			<img class="avatar-holder-100" src="{{answer.author.userpic_path}}">
 			<br><a href="{{answer.author.id}}">{{answer.author.name}}</a><br>
 			<div class="btn-group">
-				<a href="#" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-arrow-up vote-up"></span></a><span class="btn btn-default btn-xs">-1</span><a href="#" class="btn btn-default btn-xs voted-down"><span class="glyphicon glyphicon-arrow-down vote-down"></span></a>
+				<a href="#" id="answer_{{answer.id}}_voteup_button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-arrow-up vote-up"></span></a><span class="btn btn-default btn-xs">{{answer.rating}}</span><a href="#" id="answer_{{answer.id}}_votedown_button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-arrow-down vote-down"></span></a>
 			</div>
 				
 		</div>
@@ -20,5 +20,7 @@
 				{{answer.text}}
 				
 		</div>
+		
+		{% include "elements/answer.js" with aid=answer.id %}
 		
 	</div>

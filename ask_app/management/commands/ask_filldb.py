@@ -14,21 +14,33 @@ class Command(NoArgsCommand):
 	help = "One time run command to fill database with 10k tags, 10k users, 100k questions, 1M answers and 2M votes...\n\nUser password is 123, by the way."
 	
 	def handle_noargs(self, **options):
-		self.add10ktags()
-		self.add10kusers()
-		self.add100kquestions()
-		self.add1Manswers()
-		self.add3Mvotes()
+		#print "~~~Adding 10 000 tags~~~"
+		#self.add10ktags()
+		#print "~~~Adding 10 000 users~~~"
+		#self.add10kusers()
+		#print "~~~Adding 100 000 qusetions~~~"
+		#self.add100kquestions()
+		#print "~~~Adding 1 000 000 answers~~~"
+		#self.add1Manswers()
+		#print "~~~Adding 3 000 000 votes~~~"
+		#self.add3Mvotes()
+		print "~~~Applying fixes~~~"
+		self.addFix()
+		print "~~~Updating ratings~~~"
 		self.updateRatings()
+		print "~~~Done!~~~"
 		
 	def add10ktags(self):
-		for i in range (1, TAG_AMT):
+		for i in range (1, TAG_AMT + 1):
 			name = "Tag_" + `i`
 			tag = Tag(tagName=name)
 			tag.save()
+			
+			if i % 1000 == 0: # Every 1000th tag
+				print "Added " + `i` + " tag"
 	
 	def add10kusers(self):
-		for i in range (1, USR_AMT):
+		for i in range (1, USR_AMT + 1):
 			login = "User_" + `i`
 			email = "user_" + `i` + "@users.com"
 			nickname = "User " + `i`
@@ -37,11 +49,14 @@ class Command(NoArgsCommand):
 			user = User.objects.create_user(username=login, email=email, password=password)
 			extuser = ExtendedAskUser(user = user, nickname = nickname)
 			extuser.save()
+			
+			if i % 1000 == 0: # Every 1000th user
+				print "Added " + `i` + " user"
 	
 	def add100kquestions(self):
 		tag_amount = Tag.objects.all().count()
 		user_amount = ExtendedAskUser.objects.all().count()
-		for i in range (1, QUE_AMT):
+		for i in range (1, QUE_AMT + 1):
 			user_number = randint(1, user_amount)
 			user = User.objects.get(pk=user_number)
 			
@@ -63,10 +78,13 @@ class Command(NoArgsCommand):
 			question.save()
 			question.tags.add(*tags)
 			
+			if i % 1000 == 0: # Every 1000th question
+				print "Added " + `i` + " question"
+			
 	def add1Manswers(self):
 		question_amount = Question.objects.all().count()
 		user_amount = ExtendedAskUser.objects.all().count()
-		for i in range (1, ANS_AMT):
+		for i in range (1, ANS_AMT + 1):
 			user_number = randint(2, user_amount)
 			user = User.objects.get(pk=user_number)
 		
@@ -77,12 +95,15 @@ class Command(NoArgsCommand):
 			
 			answer = Answer(author = user, text = text, question = question)
 			answer.save()
+			
+			if i % 10000 == 0: # Every 10 000th answer
+				print "Added " + `i` + " answer"
 				
 	def add3Mvotes(self):
 		question_amount = Question.objects.all().count()
 		user_amount = ExtendedAskUser.objects.all().count()
 		answer_amount = Answer.objects.all().count()
-		for i in range (1, QVT_AMT):
+		for i in range (1, QVT_AMT + 1):
 			user_number = randint(2, user_amount)
 			user = User.objects.get(pk=user_number)
 		
@@ -92,8 +113,11 @@ class Command(NoArgsCommand):
 			vote_sign = randint(0, 1)
 	
 			QuestionVote.objects.create(user=user, question=question, isDislike = vote_sign)
+			
+			if i % 10000 == 0: # Every 10 000th vote
+				print "Added " + `i` + " question vote"
 		
-		for i in range (1, AVT_AMT):
+		for i in range (1, AVT_AMT + 1):
 			user_number = randint(2, user_amount)
 			user = User.objects.get(pk=user_number)
 		
@@ -103,7 +127,10 @@ class Command(NoArgsCommand):
 			vote_sign = randint(0, 1)
 			
 			AnswerVote.objects.create(user=user, answer=answer, isDislike = vote_sign)
-				
+			
+			if i % 10000 == 0: # Every 10 000th vote
+				print "Added " + `i` + " answer vote"
+								
 	def updateRatings(self):
 		question_amount = Question.objects.all().count()
 		user_amount = ExtendedAskUser.objects.all().count()
@@ -121,12 +148,18 @@ class Command(NoArgsCommand):
 			
 			question.save()
 			
+			if i % 1000 == 0: # Every 1000th question
+				print "Updated " + `i` + " question rating"
+			
 		for i in range (1, answer_amount):
 			answer = Answer.objects.get(pk=i)
 			positive_votes = answer.votes.filter(answervote__isDislike=False).count()
 			negative_votes = answer.votes.filter(answervote__isDislike=True).count()
 			answer.rating = positive_votes - negative_votes
 			answer.save()
+			
+			if i % 10000 == 0: # Every 10 000th answer
+				print "Updated " + `i` + " answer rating"
 			
 		for i in range(1, tag_amount):
 			tag = Tag.objects.get(pk=i)
@@ -137,6 +170,9 @@ class Command(NoArgsCommand):
 			
 			tag.rating = rating
 			tag.save()
+			
+			if i % 1000 == 0: # Every 1000th tag
+				print "Updated " + `i` + " tag rating"
 			
 		for i in range(1, user_amount):
 			user = User.objects.get(pk=i)
@@ -152,4 +188,55 @@ class Command(NoArgsCommand):
 			eauser.rating = qrating + arating
 			eauser.save()
 			
+			if i % 1000 == 0: # Every 1000th user
+				print "Updated " + `i` + " user rating"
+			
+			
+# After 2 days python ran out of memory on ~710000 answer vote. Also question had not [1,3] tags, but [1,2] instead.
+# Fixes:
+
+
+	def addFix(self):
+		question_amount = Question.objects.all().count()
+		user_amount = ExtendedAskUser.objects.all().count()
+		answer_amount = Answer.objects.all().count()
+		tag_amount = Tag.objects.all().count()
+		
+		for i in range(1, question_amount):
+			question = Question.objects.get(pk=i)
+			tags = question.tags
+			tag_number_list = []
+			for j in range(1, tags.count()):
+				tag_number = tags.all()[j].pk
+				tag_number_list.append(tag_number)
+				
+			added = False
+			tag_id = 1
+			while (added != True):
+				tag_id = randint(1,tag_amount)
+				if not tag_id in tag_number_list:
+					added = True
+			newtag = []
+			tag = Tag.objects.get(pk=tag_id)
+			newtag.append(tag)
+			question.tags.add(*newtag)
+			
+			if i % 1000 == 0: # Every 1000th question
+				print "Added one tag to " + `i` + " question"
+		
+		
+		# Additional million of answervotes.
+		for i in range (1, 1000001):
+			user_number = randint(2, user_amount)
+			user = User.objects.get(pk=user_number)
+		
+			answer_number = randint(1, answer_amount)
+			answer = Answer.objects.get(pk=answer_number)
+		
+			vote_sign = randint(0, 1)
+			
+			AnswerVote.objects.create(user=user, answer=answer, isDislike = vote_sign)
+			
+			if i % 10000 == 0: # Every 10 000th vote
+				print "Added " + `i` + " answer vote"
 			

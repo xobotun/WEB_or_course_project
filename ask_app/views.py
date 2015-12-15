@@ -1,5 +1,5 @@
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect, Http404
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import HttpResponseRedirect, Http404, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import auth
 from ask_app.models import *
@@ -16,7 +16,8 @@ def main_page(request):
 	context = {}
 	tql = paginate(question_list, 1)
 	question_list = Question.objects.form_dictionary(query=tql['questions'].object_list)
-	context.update({'title': 'Titled template', 'user': get_user(request), 'question_list': question_list, 'paginator': tql, 'right_block': right_block()})
+	context.update({'title': 'Titled template', 'user': get_user_dict(request), 'question_list': question_list, 'paginator': tql, 'right_block': right_block()})
+	set_previous_page(request)
 	return render(request, 'main_page.html', context)
 	
 # Done
@@ -25,7 +26,8 @@ def	hot_questions(request):
 	context = {}
 	tql = paginate(question_list, 1)
 	question_list = Question.objects.form_dictionary(query=tql['questions'].object_list)
-	context.update({'title': 'Titled template', 'user': get_user(request), 'question_list': question_list, 'paginator': tql, 'right_block': right_block()})
+	context.update({'title': 'Titled template', 'user': get_user_dict(request), 'question_list': question_list, 'paginator': tql, 'right_block': right_block()})
+	set_previous_page(request)
 	return render(request, 'main_page.html', context)
 
 # Done
@@ -34,7 +36,8 @@ def	tag(request, tag_name):
 	context = {}
 	tql = paginate(question_list, 1)
 	question_list = Question.objects.form_dictionary(query=tql['questions'].object_list)
-	context.update({'title': 'Titled template', 'user': get_user(request), 'question_list': question_list, 'paginator': tql, 'right_block': right_block()})
+	context.update({'title': 'Titled template', 'user': get_user_dict(request), 'question_list': question_list, 'paginator': tql, 'right_block': right_block()})
+	set_previous_page(request)
 	return render(request, 'main_page.html', context)
 
 # Done
@@ -53,7 +56,8 @@ def questions(request, page_num=1):
 	context = {}
 	tql = paginate(question_list, page_num)
 	question_list = Question.objects.form_dictionary(query=tql['questions'].object_list)
-	context.update({'title': 'Titled template', 'user': get_user(request), 'question_list': question_list, 'paginator': tql, 'right_block': right_block()})
+	context.update({'title': 'Titled template', 'user': get_user_dict(request), 'question_list': question_list, 'paginator': tql, 'right_block': right_block()})
+	set_previous_page(request)
 	return render(request, 'main_page.html', context)
 
 # Done
@@ -66,12 +70,13 @@ def question(request, question_num):
 	form = AnswerForm()
 	if request.POST:
 		form = AnswerForm(request.POST)
-		if (form.save(request=request, question_id=question_num)):
+		answer_num = form.save(request=request, question_id=question_num)
+		if (answer_num):
 			Question.objects.increase_answers_counter(id=question_num)
-			return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+			return HttpResponseRedirect(get_previous_page(request) + "#answer_" + `answer_num`)
 		else:
 			errors_dict = form.errors
-	user = get_user(request)
+	user = get_user_dict(request)
 	context = {}
 	draw_tick = False
 	if user is not None:
@@ -79,6 +84,7 @@ def question(request, question_num):
 			draw_tick = True
 		
 	context.update({'title': 'Answers to ' + question_answers['question']['title'], 'draw_tick': draw_tick, 'form': form, 'user': user, 'question': question_answers['question'], 'answers': question_answers['answers'], 'right_block': right_block(), 'errors': errors_dict})
+	set_previous_page(request)
 	return render(request, 'question_answers.html', context)
 	
 # Done
@@ -88,11 +94,11 @@ def login(request):
 	if request.POST:
 		form = LoginForm(request.POST)
 		if (form.auth_and_login(request=request)):
-			return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+			return HttpResponseRedirect(get_previous_page(request))
 		else:
 			errors_dict = form.errors
 	context = {}
-	context.update({'title': 'Log in', 'right_block': right_block(), 'previous_page': request.GET.urlencode, 'form': form, 'user': get_user(request), 'errors': errors_dict})
+	context.update({'title': 'Log in', 'right_block': right_block(), 'previous_page': request.GET.urlencode, 'form': form, 'user': get_user_dict(request), 'errors': errors_dict})
 	return render(request, 'login.html', context)
 
 # Done
@@ -102,11 +108,11 @@ def register(request):
 	if request.POST:
 		form = RegisterForm(request.POST)
 		if (form.save(request=request)):
-			return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+			return HttpResponseRedirect(get_previous_page(request))
 		else:
 			errors_dict = form.errors# + form.checkIfDuplicates()
 	context = {}
-	context.update({'title': 'Register', 'right_block': right_block(), 'previous_page': request.GET.urlencode, 'form': form, 'user': get_user(request), 'errors': errors_dict })
+	context.update({'title': 'Register', 'right_block': right_block(), 'previous_page': request.GET.urlencode, 'form': form, 'user': get_user_dict(request), 'errors': errors_dict })
 	return render(request, 'register.html', context)
 
 # Done
@@ -116,12 +122,13 @@ def ask(request):
 	errors_dict = []
 	if request.POST:
 		form = QuestionForm(request.POST)
-		if (form.save(request=request)):
-			return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+		question_num = form.save(request=request)
+		if (question_num):
+			return redirect('question', question_num=question_num)
 		else:
 			errors_dict = form.errors
 	context = {}
-	context.update({'title': 'Ask your question', 'user': get_user(request), 'right_block': right_block(), 'form': form, 'errors': errors_dict})
+	context.update({'title': 'Ask your question', 'user': get_user_dict(request), 'right_block': right_block(), 'form': form, 'errors': errors_dict})
 	return render(request, 'ask.html', context)
 
 # Done
@@ -129,7 +136,8 @@ def ask(request):
 def settings(request):
 	user = temporary_question_list[0]['author']
 	context = {}
-	context.update({'title': 'Settings', 'user': get_user(request), 'right_block': right_block()})
+	context.update({'title': 'Settings', 'user': get_user_dict(request), 'right_block': right_block()})
+	set_previous_page(request)
 	return render(request, 'settings.html', context)
 
 # WIP
@@ -140,10 +148,16 @@ def logout(request):
 
 #@login kinda required
 def ajax(request):
-	if request.POST or request.GET:
+	response_dict = erroneous_ajax_dict()
+	if request.GET:
+		pass # Check if username exists
+	elif request.POST:
+		post_data = request.POST.get('post_data')
+		if post_data.get('type') == 'question_vote' or post_data.get('type') == 'answer_vote':
+			response_dict = ExtendedAskUser.objects.attempt_to_vote(ea_user=get_user(request), data=post_data)
+	else:
 		raise Http404
-	#switch for ajax type and delegate to different functions
-	pass
+	return JsonResponse(response_dict)
 
 # WIP. And probably never will be ready...
 def search(request, search_string):
