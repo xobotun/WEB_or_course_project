@@ -106,7 +106,7 @@ def register(request):
 	form = RegisterForm()
 	errors_dict = []
 	if request.POST:
-		form = RegisterForm(request.POST)
+		form = RegisterForm(request.POST, request.FILES)
 		if (form.save(request=request)):
 			return HttpResponseRedirect(get_previous_page(request))
 		else:
@@ -155,6 +155,8 @@ def ajax(request):
 		post_data = request.POST
 		if post_data.get('type') == 'question_vote' or post_data.get('type') == 'answer_vote':
 			response_dict = attempt_to_vote(ea_user=get_user(request), data=post_data)
+		if post_data.get('type') == 'answer_checkbox':
+			response_dict = attempt_to_checkbox(ea_user=get_user(request), data=post_data)
 	else:
 		raise Http404
 	return JsonResponse(response_dict)
