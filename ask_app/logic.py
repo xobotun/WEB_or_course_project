@@ -84,7 +84,7 @@ def attempt_to_vote(ea_user, data):
 					return erroneous_ajax_dict()
 				if data.get('message[vote_sign]') == 'up':
 					vote_isDislike = False
-				elif data.get('message[vote_sign]') != 'down':
+				elif data.get('message[vote_sign]') == 'down':
 					vote_isDislike = True
 				else:
 					return erroneous_ajax_dict()
@@ -100,12 +100,35 @@ def attempt_to_vote(ea_user, data):
 					return erroneous_ajax_dict()
 				if data.get('message[vote_sign]') == 'up':
 					vote_isDislike = False
-				elif data.get('message[vote_sign]') != 'down':
+				elif data.get('message[vote_sign]') == 'down':
 					vote_isDislike = True
 				else:
 					return erroneous_ajax_dict()
 				return answer_vote(user=ea_user.user, id=aid, sign=vote_isDislike)
 
+				
+def attempt_to_checkbox(ea_user, data):
+	quid = int(data.get('message[question_id]'))
+	question = Question.objects.get(pk=quid)
+	if ea_user == None:
+		return ajax_dict(type='error', message='You need to be logged in to do that!')
+	elif ea_user.user != question.author:
+		return ajax_dict(type='error', message='You can not vote for answer not related to your question!')
+	else:
+		aid = 0
+		try:
+			aid = int(data.get('message[answer_id]'))
+		except ValueError:
+			return erroneous_ajax_dict()
+		atype = 'success'
+		amessage = 'You have succesfully marked this answer as useful!'
+		answer = Answer.objects.get(pk=aid)
+		answer.isBestAnswer = not answer.isBestAnswer
+		answer.save()
+		aiba = False
+		if (answer.isBestAnswer == True):
+			aiba = True
+		return ajax_dict(type=atype, message={'text': amessage, 'new_state': aiba, 'answer_id': aid})
 		
 def question_vote(user, id, sign):
 	#qtype = 'error'
@@ -114,9 +137,9 @@ def question_vote(user, id, sign):
 	qmessage = 'You have succesfully voted!'
 	question = Question.objects.get(pk=id)
 	if sign:
-		rating_delta = 1 
+		rating_delta = -1 
 	else:
-		rating_delta = -1
+		rating_delta = 1
 	try:
 		user_vote = question.questionvote_set.filter(user__exact=user)[0]
 		if user_vote.isDislike == sign:
@@ -134,7 +157,7 @@ def question_vote(user, id, sign):
 	question.questionvote_set.add(qv)
 	question.rating += rating_delta
 	question.save()
-	return ajax_dict(type=qtype, message={'text': qmessage, 'new_rating': question.rating})
+	return ajax_dict(type=qtype, message={'text': qmessage, 'new_rating': question.rating, 'question_id': id})
 	
 def answer_vote(user, id, sign):
 	#qtype = 'error'
@@ -143,9 +166,9 @@ def answer_vote(user, id, sign):
 	amessage = 'You have succesfully voted!'
 	answer = Answer.objects.get(pk=id)
 	if sign:
-		rating_delta = 1 
+		rating_delta = -1 
 	else:
-		rating_delta = -1
+		rating_delta = 1
 	try:
 		user_vote = answer.answervote_set.filter(user=user)[0]
 		if user_vote.isDislike == sign:
@@ -163,4 +186,4 @@ def answer_vote(user, id, sign):
 	answer.answervote_set.add(av)
 	answer.rating += rating_delta
 	answer.save()
-	return ajax_dict(type=atype, message={'text': amessage, 'new_rating': answer.rating})
+	return ajax_dict(type=atype, message={'text': amessage, 'new_rating': answer.rating, 'answer_id': id})

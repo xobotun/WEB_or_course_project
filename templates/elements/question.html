@@ -10,7 +10,7 @@
 			<img class="avatar-holder-100" src="{{question.author.userpic_path}}">
 			<br><a href="{{question.author.id}}">{{question.author.name}}</a><br>
 			<div class="btn-group nowrap">
-				<a href="#" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-arrow-up vote-up"></span></a><span class="btn btn-default btn-xs">{{question.rating}}</span><a href="#" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-arrow-down vote-down"></span></a>
+				<button type="button" id="question_{{question.id}}_voteup_button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-arrow-up vote-up"></span></button><span id="question_{{question.id}}_rating_label" class="btn btn-default btn-xs">{{question.rating}}</span><button type="button" id="question_{{question.id}}_votedown_button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-arrow-down vote-down"></span></button>
 			</div>
 		</div>
 	  

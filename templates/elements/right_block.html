@@ -2,7 +2,7 @@
 	<p class="h2">Popular tags</p>
 </div>
 <div class="row">
-	<div class="col-sm-12 col-md-12 pull-center">
+	<div class="col-sm-12 col-md-12 pull-center" id="best_tags_list">
 	{% for tag in tags %}
 		<a href="{% url 'tag' tag.name %}" value="{{tag.rating}}">{{tag.name}}</a>
 	{% endfor %}
@@ -11,7 +11,7 @@
 <div class="row">
 	<p class="h2">Best members</p>
 </div>
-<div class="row row-no-margin">
+<div class="row row-no-margin" id="best_users_list">
 	{% for user in users %}
 	<div class="row">
 		<div class="col-sm-4 col-md-4 col-lg-3 col-no-padding"><img class="avatar-holder-50" src="{{user.userpic_path}}"></div>

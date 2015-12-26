@@ -36,8 +36,9 @@
 			// handle a successful response
 			success : function(json) {
 				//$('#post-text').val(''); // remove the value from the input
+				console.log(json.type + ":"); // another sanity check
 				console.log(json); // log the returned json to the console
-				console.log("success"); // another sanity check
+				$('#question_' + json.message.question_id + '_rating_label').html(json.message.new_rating);
 			},
 
 			// handle a non-successful response
